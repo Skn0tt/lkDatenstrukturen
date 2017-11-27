@@ -1,34 +1,35 @@
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 /**
  * Created by simon.knott on 17.11.2017.
  */
-public class Node<T> {
-    private T content;
-    private Node<T> next;
+public class Node<ContentType> {
+    private ContentType content;
+    private Node<ContentType> next;
 
   /**
    *
    * @param content
    */
-  public Node(T content) {
+  public Node(ContentType content) {
         this.content = content;
     }
 
-    public T getContent() {
+    public ContentType getContent() {
         return content;
     }
 
-    public void setContent(T content) {
+    public void setContent(@NotNull ContentType content) {
         this.content = content;
     }
 
     @Nullable
-    public Node<T> getNext() {
+    public Node<ContentType> getNext() {
         return next;
     }
 
-    public void setNext(Node<T> next) {
+    public void setNext(Node<ContentType> next) {
         this.next = next;
     }
 }

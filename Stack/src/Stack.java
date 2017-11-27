@@ -1,35 +1,23 @@
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+
 /**
  * Created by simon.knott on 17.11.2017.
  */
-public class Stack<T> {
+public class Stack<ContentType> {
     /*
      * Attributes
      */
-    private Node<T> head;
+    private Node<ContentType> head;
 
     /*
      * # Constructor
      */
-    /**
-     * Constructs new Stack with one node.
-     * @param head first node
-     */
-    Stack(Node<T> head) {
-        this.head = head;
-    }
 
     /**
      * Constructs an empty Stack.
      */
     Stack() {}
-
-    /**
-     * Constructs new Stack with one value.
-     * @param value first value
-     */
-    Stack(T value) {
-        this(new Node<>(value));
-    }
 
     /*
      * # Interface
@@ -38,27 +26,33 @@ public class Stack<T> {
      * ## Standard
      */
 
-    public void push(T value) {
-        Node<T> node = new Node<>(value);
-        node.setNext(head);
-        this.head = node;
+    public void push(@NotNull ContentType value) {
+      if (value == null) return;
+
+      Node<ContentType> node = new Node<>(value);
+      node.setNext(head);
+      this.head = node;
     }
 
     /**
      * Pop the first value off the stack
      * @return first value
      */
-    public T pop() {
-        Node<T> n = head;
+    @Nullable
+    public void pop() {
+        if (isEmpty()) return;
+
         head = head.getNext();
-        return n.getContent();
     }
 
     /**
      * Get Value of top Node without removing it
-     * @return
+     * @return null if empty
      */
-    public T top() {
+    @Nullable
+    public ContentType top() {
+        if (isEmpty()) return null;
+
         return head.getContent();
     }
 
@@ -77,9 +71,9 @@ public class Stack<T> {
     /**
      * Returns null if Node not existent.
      * @param index
-     * @return Node<T> or null
+     * @return Node<ContentType> or null
      */
-    public T get(int index) {
+    public ContentType get(int index) {
         return getNode(index).getContent();
     }
 
@@ -88,7 +82,7 @@ public class Stack<T> {
      * @param index of node
      * @param value to set
      */
-    public void set(int index, T value) {
+    public void set(int index, ContentType value) {
         getNode(index).setContent(value);
     }
 
@@ -97,14 +91,14 @@ public class Stack<T> {
      * @param index of the new value
      * @param value to inset
      */
-    public void insert(int index, T value) {
+    public void insert(int index, ContentType value) {
         if (index == 0) {
             push(value);
             return;
         }
 
-        Node<T> previous = getNode(index - 1);
-        Node<T> node = new Node<>(value);
+        Node<ContentType> previous = getNode(index - 1);
+        Node<ContentType> node = new Node<>(value);
 
         node.setNext(previous.getNext());
         previous.setNext(node);
@@ -115,7 +109,7 @@ public class Stack<T> {
      * @return length
      */
     public int length() {
-        Node<T> node = head;
+        Node<ContentType> node = head;
 
         int i = 0;
         while(node.getNext() != null) {
@@ -134,8 +128,8 @@ public class Stack<T> {
      * @param index to get
      * @return Node
      */
-    private Node<T> getNode(int index) {
-        Node<T> node = head;
+    private Node<ContentType> getNode(int index) {
+        Node<ContentType> node = head;
 
         for (int i = 0; i < index; i++) {
             if (node == null) return null;
