@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Fähre/Fähre.iml" filepath="$PROJECT_DIR$/Fähre/Fähre.iml" />
       <module fileurl="file://$PROJECT_DIR$/Stack/Stack.iml" filepath="$PROJECT_DIR$/Stack/Stack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Testing.iml" filepath="$PROJECT_DIR$/.idea/modules/Testing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Testing_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Testing_main.iml" group="Testing" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Testing_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Testing_test.iml" group="Testing" />
       <module fileurl="file://$PROJECT_DIR$/Weihnachtsmann/Weihnachtsmann.iml" filepath="$PROJECT_DIR$/Weihnachtsmann/Weihnachtsmann.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/lkDatenstrukturen.iml" filepath="$PROJECT_DIR$/.idea/lkDatenstrukturen.iml" />
     </modules>
