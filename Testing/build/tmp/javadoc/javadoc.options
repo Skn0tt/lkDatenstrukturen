@@ -1,6 +1,0 @@
--classpath '/Users/skn0tt/Documents/dev/Schule/lkDatenstrukturen/Testing/build/classes/main:/Users/skn0tt/Documents/dev/Schule/lkDatenstrukturen/Testing/build/resources/main'
--d '/Users/skn0tt/Documents/dev/Schule/lkDatenstrukturen/Testing/build/docs/javadoc'
--doctitle 'Testing 1.0-SNAPSHOT API'
--quiet 
--windowtitle 'Testing 1.0-SNAPSHOT API'
-'/Users/skn0tt/Documents/dev/Schule/lkDatenstrukturen/Testing/src/main/java/Stack.java'
