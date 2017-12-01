@@ -16,5 +16,5 @@ Was die einzelnen Tests machen, ist im Quellcode dokumentiert.
 Testverzeichnis: `src/test/java`
 
 Nameskonvention:  
-test der Klasse `Stack` -> `StackTest`  
+test der Klasse `Queue` -> `StackTest`
 test 1 der Methode `pop()` -> `testPop1()`
