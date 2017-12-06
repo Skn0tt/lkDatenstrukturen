@@ -5,14 +5,10 @@ import com.sun.istack.internal.Nullable;
  * Created by simon.knott on 17.11.2017.
  */
 public class Queue<ContentType> {
-    private class Node<ContentType> {
+    private class Node {
         private ContentType content;
-        private Node<ContentType> next;
+        private Node next;
 
-        /**
-         *
-         * @param content
-         */
         public Node(ContentType content) {
             this.content = content;
         }
@@ -26,19 +22,19 @@ public class Queue<ContentType> {
         }
 
         @Nullable
-        public Node<ContentType> getNext() {
+        public Node getNext() {
             return next;
         }
 
-        public void setNext(Node<ContentType> next) {
+        public void setNext(Node next) {
             this.next = next;
         }
     }
     /*
      * Attributes
      */
-    private Node<ContentType> head;
-    private Node<ContentType> tail;
+    private Node head;
+    private Node tail;
 
     /*
      * # Constructor
@@ -59,7 +55,7 @@ public class Queue<ContentType> {
     public void enqueue(@NotNull ContentType value) {
       if (value == null) return;
 
-      Node<ContentType> node = new Node<>(value);
+      Node node = new Node(value);
 
       if (isEmpty()) {
         this.head = node;
@@ -70,10 +66,6 @@ public class Queue<ContentType> {
       }
     }
 
-    /**
-     * Pop the first value off the stack
-     * @return first value
-     */
     @Nullable
     public void dequeue() {
         if (isEmpty()) return;
@@ -81,10 +73,6 @@ public class Queue<ContentType> {
         head = head.getNext();
     }
 
-    /**
-     * Get Value of front Node without removing it
-     * @return null if empty
-     */
     @Nullable
     public ContentType front() {
         if (isEmpty()) return null;

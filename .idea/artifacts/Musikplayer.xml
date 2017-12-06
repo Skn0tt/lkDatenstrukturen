@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Musikplayer">
+    <output-path>$PROJECT_DIR$/out/artifacts/Musikplayer</output-path>
+    <root id="archive" name="Musikplayer.jar">
+      <element id="module-output" name="Musikplayer" />
+      <element id="library" level="module" name="jid3lib-0.5.4" module-name="Musikplayer" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/Musikplayer/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

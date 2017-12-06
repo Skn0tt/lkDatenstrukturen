@@ -3,10 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Fähre/Fähre.iml" filepath="$PROJECT_DIR$/Fähre/Fähre.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Musikplayer/Musikplayer.iml" filepath="$PROJECT_DIR$/Musikplayer/Musikplayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/Queue/Queue.iml" filepath="$PROJECT_DIR$/Queue/Queue.iml" />
       <module fileurl="file://$PROJECT_DIR$/Stack/Stack.iml" filepath="$PROJECT_DIR$/Stack/Stack.iml" />
-      <module fileurl="file://H:\Dokumente\git\lkDatenStrukturen\.idea\modules\Testing_main.iml" filepath="H:\Dokumente\git\lkDatenStrukturen\.idea\modules\Testing_main.iml" group="Testing" />
-      <module fileurl="file://H:\Dokumente\git\lkDatenStrukturen\.idea\modules\Testing_test.iml" filepath="H:\Dokumente\git\lkDatenStrukturen\.idea\modules\Testing_test.iml" group="Testing" />
+      <module fileurl="file://H:/Dokumente/git/lkDatenStrukturen/.idea/modules/Testing_main.iml" filepath="H:/Dokumente/git/lkDatenStrukturen/.idea/modules/Testing_main.iml" group="Testing" />
+      <module fileurl="file://H:/Dokumente/git/lkDatenStrukturen/.idea/modules/Testing_test.iml" filepath="H:/Dokumente/git/lkDatenStrukturen/.idea/modules/Testing_test.iml" group="Testing" />
       <module fileurl="file://$PROJECT_DIR$/Wartezimmer/Wartezimmer.iml" filepath="$PROJECT_DIR$/Wartezimmer/Wartezimmer.iml" />
       <module fileurl="file://$PROJECT_DIR$/Weihnachtsmann/Weihnachtsmann.iml" filepath="$PROJECT_DIR$/Weihnachtsmann/Weihnachtsmann.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/lkDatenstrukturen.iml" filepath="$PROJECT_DIR$/.idea/lkDatenstrukturen.iml" />
