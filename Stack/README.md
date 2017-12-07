@@ -3,6 +3,7 @@
 
 - Dynamische Listenstruktur
 - LIFO (Last in, First Out)
+  - Werden schneller Elemente hinzugefügt als entfernt, bleiben die untersten (ersten) Elemente unberührt
 
 ## Modellierung
 Zwei Klassen:
@@ -52,64 +53,9 @@ Entfernt das oberste Element.
 ```java
 head = head.getNext();
 ```
-### Erweitert
-#### get()
-Gibt den $n$-ten Wert zurück, von `head` aus gezählt.
 
-```java
-Node<T> node = head;
+# Nutzungsszenarien
 
-for (int i = 0; i < index; i++) {
-  if (node == null) return null;
-
-  node = node.getNext();
-}
-
-return node.getContent()
-```
-
-#### set()
-Setzt den $n$-ten Wert, von `head` aus gezählt.
-
-```java
-Node<T> node = head;
-
-for (int i = 0; i < index; i++) {
-  if (node == null) return;
-
-  node = node.getNext();
-}
-
-node.setContent()
-```
-
-#### insert()
-```java
-void insert(int index, T value) {
-    if (index == 0) {
-        push(value);
-        return;
-    }
-
-    Node<T> previous = getNode(index - 1);
-    Node<T> node = new Node<>(value);
-
-    node.setNext(previous.getNext());
-    previous.setNext(node);
-}
-```
-
-#### length()
-```java
-int length() {
-  Node<T> node = head;
-
-  int i = 0;
-  while (node.getNext() != null) {
-      node = node.getNext();
-      i++;
-  }
-
-  return i;
-}
-```
+- Hilfreich, um Prozesse zu modellieren
+- Beispiel:
+  - Klausurenstapel
