@@ -1,5 +1,5 @@
-# Queue
-*Queue*
+# PriorityQueue
+*PriorityQueue*
 
 - Dynamische Listenstruktur
 - FIFO (First in, First Out)
@@ -8,12 +8,12 @@
 ## Modellierung
 Zwei Klassen:
 
-- Queue
+- PriorityQueue
   - Kennt *erstes* (`head`), *letztes* Element (`tail`)
 
 ## Algorithmen
 ### Standard
-Es gibt vier Standard-Methoden, die eine Queue charakterisieren.
+Es gibt vier Standard-Methoden, die eine PriorityQueue charakterisieren.
 
 #### isEmpty()
 Gibt zurück, ob der Stack leer ist.
@@ -29,7 +29,7 @@ if (isEmpty()) return null;
 return head.getContent();
 ```
 #### enqueue()
-Hängt der Queue ein neues Element `element` an;
+Hängt der PriorityQueue ein neues Element `element` an;
 
 ```java
 if (isEmpty()) {

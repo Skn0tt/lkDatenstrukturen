@@ -2,7 +2,7 @@ import org.farng.mp3.id3.*;
 import org.farng.mp3.*;
 
 public class Playlist {
-  private Queue<Lied> playlist = new Queue<>();
+  private PriorityQueue<Lied> playlist = new PriorityQueue<>();
   private Lied aktuell;
   private MP3Player player;
 
@@ -25,7 +25,8 @@ public class Playlist {
           tags.getSongTitle(),
           tags.getLeadArtist(),
           mp3file
-        )
+        ),
+              0
       );
     } catch (Exception e) {}
   }
@@ -36,7 +37,7 @@ public class Playlist {
    */
 
   public void abspielen() {
-    playlist.enqueue(aktuell);
+    playlist.enqueue(aktuell, 0);
     aktuell = playlist.front();
     playlist.dequeue();
 
@@ -58,14 +59,14 @@ public class Playlist {
   * @return ...
   */
   public String anzeigen() {
-    Queue<Lied> temp = new Queue<>();
+    PriorityQueue<Lied> temp = new PriorityQueue<>();
     StringBuilder builder = new StringBuilder();
 
     while (!playlist.isEmpty()) {
       builder.append(playlist.front());
       builder.append('\n');
 
-      temp.enqueue(playlist.front());
+      temp.enqueue(playlist.front(), 0);
       playlist.dequeue();
     }
 
