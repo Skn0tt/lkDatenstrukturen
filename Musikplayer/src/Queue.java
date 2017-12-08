@@ -1,94 +1,102 @@
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+
+/**
+ * Created by simon.knott on 17.11.2017.
+ */
 public class Queue<ContentType> {
-  // private Klasse fuer ein Element der Schlange
-  private class Node {
-    private ContentType content = null;
-    private Node nextNode = null;
+    private class Node<ContentType> {
+        private ContentType content;
+        private Node<ContentType> next;
 
-    public Node(ContentType pContent) {
-      content = pContent;
-      nextNode = null;
+        /**
+         *
+         * @param content
+         */
+        public Node(ContentType content) {
+            this.content = content;
+        }
+
+        public ContentType getContent() {
+            return content;
+        }
+
+        public void setContent(@NotNull ContentType content) {
+            this.content = content;
+        }
+
+        @Nullable
+        public Node<ContentType> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<ContentType> next) {
+            this.next = next;
+        }
     }
+    /*
+     * Attributes
+     */
+    private Node<ContentType> head;
+    private Node<ContentType> tail;
 
-    public void setNext(Node pNext) {
-      nextNode = pNext;
-    }
+    /*
+     * # Constructor
+     */
 
-    public Node getNext() {
-      return nextNode;
-    }
+    /**
+     * Constructs an empty Queue.
+     */
+    Queue() {}
 
-    public ContentType getContent() {
-      return content;
-    }
-  } // Ende private Klasse fuer ein Element
+    /*
+     * # Interface
+     */
+    /**
+     * ## Standard
+     */
 
-  // Attribute der Klasse Queue
-  private Node head;
-  private Node tail;
+    public void enqueue(@NotNull ContentType value) {
+      if (value == null) return;
 
-  // Methoden der Klasse Queue
+      Node<ContentType> node = new Node<>(value);
 
-  /**
-   * Eine leere Schlange wird erzeugt. Objekte, die in dieser Schlange
-   * verwaltet werden, muessen vom Typ ContentType sein.
-   */
-  public Queue() {
-    head = null;
-    tail = null;
-  }
-
-  /**
-   * Die Anfrage liefert den Wert true, wenn die Schlange keine Objekte
-   * enthaelt, sonst liefert sie den Wert false.
-   *
-   * @return true, falls die Schlange leer ist, sonst false
-   */
-  public boolean isEmpty() {
-    return head == null;
-  }
-
-  /**
-   * Das Objekt pContent wird an die Schlange angehaengt. Falls
-   * pContent gleich null ist, bleibt die Schlange unveraendert.
-   *
-   * @param pContent das anzuhaengende Objekt
-   */
-  public void enqueue(ContentType pContent) {
-    if (pContent != null) {
-      Node newNode = new Node(pContent);
-
-      if (this.isEmpty()) {
-        head = newNode;
-        tail = newNode;
+      if (isEmpty()) {
+        this.head = node;
+        this.tail = node;
       } else {
-        tail.setNext(newNode);
-        tail = newNode;
+        tail.setNext(node);
+        this.tail = node;
       }
     }
-  }
 
-  /**
-   * Das erste Objekt wird aus der Schlange entfernt. Falls die Schlange
-   * leer ist, wird sie nicht veraendert.
-   */
-  public void dequeue() {
-    if (!this.isEmpty()) {
-      head = head.getNext();
-    }
-  }
+    /**
+     * Pop the first value off the stack
+     * @return first value
+     */
+    @Nullable
+    public void dequeue() {
+        if (isEmpty()) return;
 
-  /**
-   * Die Anfrage liefert das erste Objekt der Schlange. Die Schlange
-   * bleibt unveraendert. Falls die Schlange leer ist, wird null zurueckgegeben.
-   *
-   * @return das erste Objekt der Schlange oder null, falls
-   * die Schlange leer ist.
-   */
-  public ContentType front() {
-    if (this.isEmpty()) {
-      return null;
-    } else {
-      return head.getContent();
+        head = head.getNext();
     }
-  }
+
+    /**
+     * Get Value of front Node without removing it
+     * @return null if empty
+     */
+    @Nullable
+    public ContentType front() {
+        if (isEmpty()) return null;
+
+        return head.getContent();
+    }
+
+    /**
+     * Checks if the stack is empty
+     * @return true if empty
+     */
+    public boolean isEmpty() {
+        return head == null;
+    }
 }

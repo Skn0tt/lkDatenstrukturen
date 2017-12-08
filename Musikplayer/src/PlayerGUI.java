@@ -4,7 +4,6 @@ import java.awt.event.*;
 import java.io.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 
 
 /**
@@ -12,7 +11,7 @@ import javax.swing.event.*;
   * Beschreibung
   *
   * @version 1.0 vom 08.11.2016
-  * @author Benjamin Reichelt
+  * @author
   */
 public class PlayerGUI extends JFrame {
   // Anfang Attribute
@@ -105,22 +104,23 @@ public class PlayerGUI extends JFrame {
   } // end of main
 
   public void hinzuBT_ActionPerformed(ActionEvent evt) {
-    String pfad = jFileChooser1_openFile().getAbsolutePath();
+    try {
+      String pfad = jFileChooser1_openFile().getAbsolutePath();
 
-    playlist.hinzufuegen(pfad);
+      playlist.hinzufuegen(pfad);
 
-    String anzeige = playlist.anzeigen();
-    wiedergabe.setText(anzeige);
+      wiedergabe.setText(playlist.anzeigen());
+    } catch (Exception e) {
+    } finally {
+    } // end of try
   } // end of hinzuBT_ActionPerformed
 
   public void abspielenBT_ActionPerformed(ActionEvent evt) {
     playlist.abspielen();
 
-    String aktuell = playlist.aktuellerTitel();
-    liedLB.setText(aktuell);
+    liedLB.setText(playlist.aktuellerTitel());
+    wiedergabe.setText(playlist.anzeigen());
 
-    String anzeige = playlist.anzeigen();
-    wiedergabe.setText(anzeige);
     abspielenBT.setVisible(false);
     stopBTN.setVisible(true);
   } // end of abspielenBT_ActionPerformed

@@ -20,4 +20,9 @@ public class Lied {
   public String getMp3Name() {
     return this.mp3Name;
   }
+
+  @Override
+  public String toString() {
+    return titel + interpret;
+  }
 }

@@ -2,30 +2,32 @@ import org.farng.mp3.id3.*;
 import org.farng.mp3.*;
 
 public class Playlist {
-  private Queue<Lied> playlist;
+  private Queue<Lied> playlist = new Queue<>();
   private Lied aktuell;
   private MP3Player player;
 
-  public Playlist() {
-    //TODO Aufgabeteil b)
-    
+  public boolean isEmpty() {
+    return playlist.isEmpty();
   }
 
   /**
   *  ...
   *  ...
   *
-  * @param Dateiname der MP3.
   */
-  public void hinzufuegen(String mp3Name) {
+  public void hinzufuegen(String mp3file) {
     try {
-      MP3File mp3 = new MP3File(mp3Name);
+      MP3File mp3 = new MP3File(mp3file);
       AbstractID3v2 tags = mp3.getID3v2Tag();
-      
-      //TODO Aufgabeteil c)
-      
-    } catch (Exception e) {
-    }
+
+      playlist.enqueue(
+        new Lied(
+          tags.getSongTitle(),
+          tags.getLeadArtist(),
+          mp3file
+        )
+      );
+    } catch (Exception e) {}
   }
      
     /**
@@ -34,18 +36,20 @@ public class Playlist {
    */
 
   public void abspielen() {
-    //TODO Aufgabeteil d)
-    
+    playlist.enqueue(aktuell);
+    aktuell = playlist.front();
+    playlist.dequeue();
+
+    start();
   }
 
   /**
   * Gibt den aktuell abgespielten tTitel für die Ausgabe zurueck.
-  *
-  * @return Dateiname des aktuellen Titels.
   */
   public String aktuellerTitel() {
-    //TODO Aufgabeteil e)
-    return null;
+    if (aktuell == null) return "";
+
+    return aktuell.getTitel();
   }
   /**
   *  ...
@@ -54,14 +58,27 @@ public class Playlist {
   * @return ...
   */
   public String anzeigen() {
-    //TODO Aufgabeteil f)
-    return null;
+    Queue<Lied> temp = new Queue<>();
+    StringBuilder builder = new StringBuilder();
+
+    while (!playlist.isEmpty()) {
+      builder.append(playlist.front());
+      builder.append('\n');
+
+      temp.enqueue(playlist.front());
+      playlist.dequeue();
+    }
+
+    playlist = temp;
+    return builder.toString();
   }
   /**
   *  ...
   *  ...
   */
   public void start() {
+    if (aktuell == null) return;
+
     player = new MP3Player(aktuell);
     player.start();
   }
@@ -70,6 +87,8 @@ public class Playlist {
   *
   */
   public void stop() {
+    if (player == null) return;
+
     player.end();
   }
 }
