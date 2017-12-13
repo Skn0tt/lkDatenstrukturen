@@ -116,6 +116,16 @@ public class PriorityQueue<ContentType> {
     }
   }
 
+  /**
+   * Returns priority of first node
+   * @return prio, -1 if empty
+   */
+  public int frontPriority() {
+    if (this.isEmpty()) return -1;
+
+    return head.getPriority();
+  }
+
   public static void main(String... args) {
     PriorityQueue<String> queue = new PriorityQueue<>();
 

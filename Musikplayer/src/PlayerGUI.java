@@ -26,6 +26,8 @@ public class PlayerGUI extends JFrame {
   private JScrollPane wiedergabeScrollPane = new JScrollPane(wiedergabe);
   private JFileChooser jFileChooser1 = new JFileChooser();
   private JButton stopBTN = new JButton();
+  private JSpinner jSpPrio = new JSpinner();
+  private SpinnerNumberModel jSpPrioModel = new SpinnerNumberModel(0, 0, 20, 1);
   private ImageIcon stopBTNIcon = new ImageIcon(ClassLoader.getSystemResource("stopp.png"));
 
   // Ende Attribute
@@ -92,6 +94,10 @@ public class PlayerGUI extends JFrame {
     stopBTN.setIcon(stopBTNIcon);
     stopBTN.setBackground(Color.BLACK);
     cp.add(stopBTN);
+    jSpPrio.setBounds(88, 40, 38, 24);
+    jSpPrio.setValue(0);
+    jSpPrio.setModel(jSpPrioModel);
+    cp.add(jSpPrio);
     jFileChooser1.setAcceptAllFileFilterUsed(true);
     // Ende Komponenten
     stopBTN.setVisible(false);
