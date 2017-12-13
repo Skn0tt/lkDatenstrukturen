@@ -113,7 +113,10 @@ public class PlayerGUI extends JFrame {
     try {
       String pfad = jFileChooser1_openFile().getAbsolutePath();
 
-      playlist.hinzufuegen(pfad);
+      playlist.hinzufuegen(
+        pfad,
+        (int) jSpPrio.getValue()
+      );
 
       wiedergabe.setText(playlist.anzeigen());
     } catch (Exception e) {

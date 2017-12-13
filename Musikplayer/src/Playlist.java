@@ -1,9 +1,12 @@
 import org.farng.mp3.id3.*;
 import org.farng.mp3.*;
 
+import java.io.IOException;
+
 public class Playlist {
   private PriorityQueue<Lied> playlist = new PriorityQueue<>();
   private Lied aktuell;
+  private int aktuellPrio;
   private MP3Player player;
 
   public boolean isEmpty() {
@@ -15,10 +18,9 @@ public class Playlist {
   *  ...
   *
   */
-  public void hinzufuegen(String mp3file) {
+  public void hinzufuegen(String mp3file, int prio) throws IOException, TagException {
     try {
-      MP3File mp3 = new MP3File(mp3file);
-      AbstractID3v2 tags = mp3.getID3v2Tag();
+      AbstractID3v2 tags = new MP3File(mp3file).getID3v2Tag();
 
       playlist.enqueue(
         new Lied(
@@ -26,9 +28,11 @@ public class Playlist {
           tags.getLeadArtist(),
           mp3file
         ),
-              0
+              prio
       );
-    } catch (Exception e) {}
+    } catch (Exception e) {
+      throw e;
+    }
   }
      
     /**
@@ -37,9 +41,17 @@ public class Playlist {
    */
 
   public void abspielen() {
-    playlist.enqueue(aktuell, 0);
+    Lied old = aktuell;
+    int oldPrio = aktuellPrio;
+
     aktuell = playlist.front();
+    aktuellPrio = playlist.frontPriority();
     playlist.dequeue();
+
+    playlist.enqueue(
+      old,
+      oldPrio == 0 ? 0 : oldPrio - 1
+    );
 
     start();
   }
@@ -64,9 +76,12 @@ public class Playlist {
 
     while (!playlist.isEmpty()) {
       builder.append(playlist.front());
+      builder.append(" (");
+      builder.append(playlist.frontPriority());
+      builder.append(")");
       builder.append('\n');
 
-      temp.enqueue(playlist.front(), 0);
+      temp.enqueue(playlist.front(), playlist.frontPriority());
       playlist.dequeue();
     }
 
