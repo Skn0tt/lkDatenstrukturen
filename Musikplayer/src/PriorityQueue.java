@@ -69,7 +69,7 @@ public class PriorityQueue<ContentType> {
       tail = newNode;
     }
     // Case: newNode muss an den Schluss
-    else if (priority == 0 || newNode.getPriority() <= tail.getPriority()){
+    else if (newNode.getPriority() <= tail.getPriority()){
       tail.setNext(newNode);
       tail = newNode;
     }
