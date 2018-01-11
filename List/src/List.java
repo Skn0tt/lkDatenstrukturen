@@ -48,7 +48,7 @@ public class List<ContentType> {
    * Moves Pointer to next Element
    */
   void next() {
-    if (!hasAccess()) return;
+    if (!hasAccess()) { return; }
     aktuell = aktuell.getNext();
   }
 
@@ -56,6 +56,8 @@ public class List<ContentType> {
    * Moves Pointer to first element
    */
   void toFirst() {
+    if (isEmpty()) { return; }
+
     aktuell = head;
   }
 
@@ -63,6 +65,8 @@ public class List<ContentType> {
    * Moves Pointer to last element
    */
   void toLast() {
+    if (isEmpty()) { return; }
+
     aktuell = tail;
   }
 
@@ -81,8 +85,9 @@ public class List<ContentType> {
    * @param content to set
    */
   void setContent(ContentType content) {
-    if (!hasAccess()) return;
-    if (aktuell.getContent() == null) return;
+    if (content == null) { return; }
+    if (!hasAccess()) { return; }
+    if (aktuell.getContent() == null) { return; }
 
     aktuell.setContent(content);
   }
@@ -110,12 +115,13 @@ public class List<ContentType> {
    * @param content to insert
    */
   void insert(ContentType content) {
-    if (content == null) return;
-    if (!hasAccess() && isEmpty()) return;
-    if (!hasAccess() && !isEmpty()) {
+    if (content == null) { return; }
+    if (!hasAccess() && !isEmpty()) { return; }
+    if (!hasAccess() && isEmpty()) {
       append(content);
       return;
     }
+
     Node toInsert = new Node(content);
 
     if (aktuell == head) {
@@ -123,14 +129,19 @@ public class List<ContentType> {
       head = toInsert;
     } else {
       Node last = getNodeBefore(aktuell);
+
+      toInsert.setNext(last.getNext());
       last.setNext(toInsert);
-      toInsert.setNext(aktuell);
     }
   }
 
   private Node getNodeBefore(Node n) {
+    if (n == null) { return null; }
+    if (n == head) { return null; }
+    if (this.isEmpty()) { return null; }
+
     Node node = head;
-    while (node != null && node.getNext() != n) node = node.getNext();
+    while (node != null && node.getNext() != n) { node = node.getNext(); }
     return node;
   }
 
@@ -142,21 +153,37 @@ public class List<ContentType> {
     if (list == null) return;
     if (list.isEmpty()) return;
 
-    this.tail.setNext(list.head);
-    this.tail = list.tail;
+    if (this.isEmpty()) {
+      this.head = list.head;
+      this.tail = list.tail;
+    } else {
+      this.tail.setNext(list.head);
+      this.tail = list.tail;
+    }
+
     list.head = null;
+    list.tail = null;
+    list.aktuell = null;
   }
 
   /**
    * Removes pointed element, next element becomes pointed
    */
   void remove() {
-    if (isEmpty()) return;
-    if (!hasAccess()) return;
+    if (isEmpty()) { return; }
+    if (!hasAccess()) { return; }
 
-    Node last = getNodeBefore(aktuell);
-    last.setNext(aktuell.getNext());
-    aktuell = aktuell.getNext();
+    if (aktuell == head) {
+      head = head.getNext();
+    } else {
+      Node last = this.getNodeBefore(aktuell);
+      if (aktuell == tail) { tail = last; }
+      last.setNext(aktuell.getNext());
+    }
+
+    next();
+
+    if (isEmpty()) { tail = null; }
   }
 
   public static void main(String... args) {
