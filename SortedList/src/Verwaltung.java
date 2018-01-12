@@ -21,7 +21,7 @@ public class Verwaltung extends JFrame {
   private JButton anfangKnopf = new JButton();
   private JButton endeKnopf = new JButton();
   private JButton sortButton = new JButton();
-  //TODO
+  SortedList<Item> liste = new SortedList<>();
   
   private JLabel jLabel1 = new JLabel();
   private JLabel jLabel2 = new JLabel();
