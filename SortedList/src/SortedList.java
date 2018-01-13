@@ -5,26 +5,35 @@ public class SortedList<ContentType extends Sortable<ContentType>> extends List<
   }
 
   public void insert(ContentType pContent) {
+    if (pContent == null) { return; }
     if (this.isEmpty()) {
       super.append(pContent);
       return;
     }
 
-    // Save current Element
-    String currentId = this.getContent().getID();
+    // Save Current
+    String currentId = null;
+    if (hasAccess()) {
+      currentId = this.getContent().getID();
+    }
 
-    super.toFirst();
+    // Actual insert
+    this.toFirst();
+    while (this.hasAccess() && this.getContent().compareTo(pContent) < 0) {
+      this.next();
+    }
 
-    // Search Element
-    while (
-      super.hasAccess() &&
-      (pContent.compareTo(this.getContent()) == 1)
-    ) { super.next(); }
+    if (hasAccess()) { super.insert(pContent); }
+    else {
+      super.append(pContent);
+    }
 
-    super.insert(pContent);
-
-    // Go back to current
-    this.getByID(currentId);
+    // Restore Current
+    if (currentId != null) { this.getByID(currentId); }
+    else {
+      toLast();
+      next();
+    }
   }
 
   public void append(ContentType pContent) {
@@ -44,20 +53,18 @@ public class SortedList<ContentType extends Sortable<ContentType>> extends List<
     if (!this.hasAccess()) { return; }
     if (this.isEmpty()) { return; }
 
-    // Save Current
-    ContentType current = this.getContent();
-    this.toFirst();
+    ContentType currentItem = this.getContent();
+    int steps = 0;
+    toFirst();
 
-    String idOfLast = current.getID();
-    for (
-      this.toFirst();
-      this.hasAccess() &&
-      !(this.getContent().compareTo(current) == 0);
-      this.next()
-    ) { idOfLast = this.getContent().getID(); }
+    while (hasAccess() && getContent() != currentItem) {
+      steps++;
+      next();
+    }
 
-    // Go to idOfLast
-    this.getByID(idOfLast);
+    toFirst();
+
+    for (int i = 0; i < steps-1; i++) { next(); }
   }
 
   public void getByID(String pId) {
