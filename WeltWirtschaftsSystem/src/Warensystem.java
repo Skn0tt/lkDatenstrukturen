@@ -39,6 +39,7 @@ public class Warensystem extends JFrame {
   private ImageIcon eanImage;
   private Stack<Warentyp> geloescht = new Stack<Warentyp>();
   private SortedList<Warentyp> warenliste = new SortedList<Warentyp>();
+  ClassLoader classLoader = getClass().getClassLoader();
 
   // Ende Attribute
   public Warensystem(String title) {
@@ -216,7 +217,8 @@ public class Warensystem extends JFrame {
   public void btnAnzeigen_ActionPerformed(ActionEvent evt) {
     if (!txtAnzeigen.getText().equals("") &&
           !txtAnzeigen.getText().equals("bitte EAN hier eingeben...")) {
-      //TODO
+      warenliste.getByID(txtAnzeigen.getText());
+      refresh();
     } else {
       txtAnzeigen.setText("bitte EAN hier eingeben...");
     }
@@ -270,12 +272,12 @@ public class Warensystem extends JFrame {
   }
 
   public void btnLoeschen_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einf�gen
     DialogLoeschen dialog = new DialogLoeschen(this, "Wirklich l�schen?", true);
     boolean loeschen = dialog.getLoeschen();
 
     if (loeschen) {
-      //TODO
+      warenliste.remove();
+      zeileLoeschen(warenliste.getContent().getID());
     }
   }
 
@@ -284,30 +286,25 @@ public class Warensystem extends JFrame {
     Warentyp ware = neu.getWare();
 
     if (ware != null) {
-      //TODO
+      warenliste.insert(ware);
       refresh();
       zeileHinzufuegen(ware);
     }
   }
 
   public void DateiJMenuItem2_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einf�gen
     System.exit(0);
   }
 
-  public void BearbeitenJMenuItem1_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einf�gen
-    
-  }
+  public void BearbeitenJMenuItem1_ActionPerformed(ActionEvent evt) {}
 
   public void HilfeJMenuItem1_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einf�gen
     HilfeDialog hilfe = new HilfeDialog(this, "�ber...", true);
   }
 
   public void zeileLoeschen(String ean) {
     try {
-      File original = new File("Artikel.txt");
+      File original = new File(classLoader.getResource("Artikel.txt").getFile());
       File kopie = new File("kopie.txt");
       BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(original)));
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(kopie)));
@@ -335,7 +332,7 @@ public class Warensystem extends JFrame {
   }
 
   public void zeileHinzufuegen(Warentyp ware) {
-    File ausgabe = new File("Artikel.txt");
+    File ausgabe = new File(classLoader.getResource("Artikel.txt").getFile());
 
     try {
       FileWriter writer = new FileWriter(ausgabe, true);
@@ -350,7 +347,7 @@ public class Warensystem extends JFrame {
   }
 
   public void listeFuellen() {
-    File eingabe = new File("Artikel.txt");
+    File eingabe = new File(classLoader.getResource("Artikel.txt").getFile());
 
     try {
       Scanner scan = new Scanner(eingabe);
@@ -371,9 +368,7 @@ public class Warensystem extends JFrame {
     }
   }
 
-  public void Warensystem_WindowClosing(WindowEvent evt) {
-    // TODO hier Quelltext einf�gen
-  }
+  public void Warensystem_WindowClosing(WindowEvent evt) {}
 
   // Ende Methoden
   public static void main(String[] args) {

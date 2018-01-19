@@ -38,7 +38,7 @@ public class DialogLoeschen extends JDialog {
     cp.setLayout(null);
     // Anfang Komponenten
     jLabel1.setBounds(8, 24, 316, 20);
-    jLabel1.setText("Möchten Sie den aktuellen Datensatz wirklich löschen?");
+    jLabel1.setText("Mï¿½chten Sie den aktuellen Datensatz wirklich lï¿½schen?");
     cp.add(jLabel1);
     ja.setBounds(64, 56, 75, 25);
     ja.setText("Ja");
@@ -65,13 +65,11 @@ public class DialogLoeschen extends JDialog {
 
   // Anfang Methoden
   public void ja_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
     loeschen = true;
     dispose();
   }
 
   public void nein_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
     loeschen = false;
     dispose();
   }

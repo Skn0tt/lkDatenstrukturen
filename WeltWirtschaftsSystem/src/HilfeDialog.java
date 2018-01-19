@@ -49,7 +49,7 @@ public class HilfeDialog extends JDialog {
     jLabel3.setFont(new Font("Arial", Font.PLAIN, 12));
     cp.add(jLabel3);
     jButton1.setBounds(88, 120, 75, 25);
-    jButton1.setText("Schließen");
+    jButton1.setText("Schlieï¿½en");
     jButton1.setMargin(new Insets(2, 2, 2, 2));
     jButton1.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
@@ -64,7 +64,6 @@ public class HilfeDialog extends JDialog {
 
   // Anfang Methoden
   public void jButton1_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
     dispose();
   }
 

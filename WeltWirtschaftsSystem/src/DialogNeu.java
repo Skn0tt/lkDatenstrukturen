@@ -103,7 +103,6 @@ public class DialogNeu extends JDialog {
   }
 
   public void btnHinzufuegen_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
     ware = new Warentyp(jTextField1.getText(), jLabel3.getText(),
                         jTextField111.getText(),
                         Double.parseDouble(jTextField112.getText()));
@@ -122,7 +121,6 @@ public class DialogNeu extends JDialog {
   }
 
   public void btnBildWaehlen_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
     jLabel3.setText(bildWaehlenOpenFilename());
   }
 
