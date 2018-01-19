@@ -1,0 +1,19 @@
+Heft;images\2.gif;9783826690648;0.95;
+Tortilla Chips;images\tortilla.jpg;8715186811013;3.99;
+Rheinfels Quelle;images\Rheinfels.jpg;4101130002905;0.49;
+Sidolin;images\Sidolin.jpg;4015000306812;10.29;
+Stift;images\3.gif;4006144582033;1.99;
+Nivea;images\Nivea.jpg;4005800001253;2.89;
+Haribo Beerentraum;images\beerentraum.jpg;9002975394352;2.99;
+Pringles;images\Pringles.jpg;5410076054428;2.79;
+Bio true;images\Bio True.jpg;7391899296531;11.20;
+Schoko Cappuccino;images\Schoko Cappuccino.jpg;4052700082837;3.19;
+Salbei Bonbons;images\Salbei Bonbons.jpg;4011932229335;2.49;
+Pulmoll;images\Pulmoll.jpg;4002590140940;1.99;
+Toblerone;images\Toblerone.jpg;7614500010013;2.59;
+
+
+
+
+
+
