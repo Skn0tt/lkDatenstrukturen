@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/Stack/Stack.iml" filepath="$PROJECT_DIR$/Stack/Stack.iml" />
       <module fileurl="file://$PROJECT_DIR$/Wartezimmer/Wartezimmer.iml" filepath="$PROJECT_DIR$/Wartezimmer/Wartezimmer.iml" />
       <module fileurl="file://$PROJECT_DIR$/Weihnachtsmann/Weihnachtsmann.iml" filepath="$PROJECT_DIR$/Weihnachtsmann/Weihnachtsmann.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WeltWirtschaftsSystem/WeltWirtschaftsSystem.iml" filepath="$PROJECT_DIR$/WeltWirtschaftsSystem/WeltWirtschaftsSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/lkDatenstrukturen.iml" filepath="$PROJECT_DIR$/.idea/lkDatenstrukturen.iml" />
     </modules>
   </component>
