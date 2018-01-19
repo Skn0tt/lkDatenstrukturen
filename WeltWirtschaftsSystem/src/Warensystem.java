@@ -30,12 +30,12 @@ public class Warensystem extends JFrame {
   private Button btnLoeschen = new Button();
   private JMenuBar menu = new JMenuBar();
   private JMenu bearbeiten = new JMenu("Bearbeiten");
-  private JMenuItem BearbeitenJMenuItem1 = new JMenuItem("R�ckg�ngig");
+  private JMenuItem BearbeitenJMenuItem1 = new JMenuItem("Rückgängig");
   private JMenu datei = new JMenu("Datei");
   private JMenuItem DateiJMenuItem1 = new JMenuItem("Neu...");
   private JMenuItem DateiJMenuItem2 = new JMenuItem("Beenden");
   private JMenu hilfe = new JMenu("Hilfe");
-  private JMenuItem HilfeJMenuItem1 = new JMenuItem("�ber");
+  private JMenuItem HilfeJMenuItem1 = new JMenuItem("Über");
   private ImageIcon eanImage;
   private Stack<Warentyp> geloescht = new Stack<Warentyp>();
   private SortedList<Warentyp> warenliste = new SortedList<Warentyp>();
@@ -132,7 +132,7 @@ public class Warensystem extends JFrame {
     label1.setAlignment(Label.CENTER);
     cp.add(label1);
     btnLoeschen.setBounds(96, 456, 59, 30);
-    btnLoeschen.setLabel("l�schen");
+    btnLoeschen.setLabel("loeschen");
     btnLoeschen.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
           btnLoeschen_ActionPerformed(evt);
@@ -195,7 +195,7 @@ public class Warensystem extends JFrame {
     if (warenliste.hasAccess()) {
       Warentyp ware = warenliste.getContent();
       label2.setText(ware.getName());
-      label3.setText("Preis: " + f.format(ware.getPreis()) + " �");
+      label3.setText("Preis: " + f.format(ware.getPreis()) + " Euro");
       lblImage.setIcon(new ImageIcon(ware.getBild()));
       EANgenerator(ware.getID());
     }
@@ -272,7 +272,7 @@ public class Warensystem extends JFrame {
   }
 
   public void btnLoeschen_ActionPerformed(ActionEvent evt) {
-    DialogLoeschen dialog = new DialogLoeschen(this, "Wirklich l�schen?", true);
+    DialogLoeschen dialog = new DialogLoeschen(this, "Wirklich löschen?", true);
     boolean loeschen = dialog.getLoeschen();
 
     if (loeschen) {
@@ -299,13 +299,13 @@ public class Warensystem extends JFrame {
   public void BearbeitenJMenuItem1_ActionPerformed(ActionEvent evt) {}
 
   public void HilfeJMenuItem1_ActionPerformed(ActionEvent evt) {
-    HilfeDialog hilfe = new HilfeDialog(this, "�ber...", true);
+    HilfeDialog hilfe = new HilfeDialog(this, "Über...", true);
   }
 
   public void zeileLoeschen(String ean) {
     try {
-      File original = new File(classLoader.getResource("Artikel.txt").getFile());
-      File kopie = new File("kopie.txt");
+      File original = new File("Artikel.txt");
+      File kopie = new File("Kopie.txt");
       BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(original)));
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(kopie)));
       int counter = 0;
@@ -332,7 +332,7 @@ public class Warensystem extends JFrame {
   }
 
   public void zeileHinzufuegen(Warentyp ware) {
-    File ausgabe = new File(classLoader.getResource("Artikel.txt").getFile());
+    File ausgabe = new File("Artikel.txt");
 
     try {
       FileWriter writer = new FileWriter(ausgabe, true);
@@ -347,7 +347,7 @@ public class Warensystem extends JFrame {
   }
 
   public void listeFuellen() {
-    File eingabe = new File(classLoader.getResource("Artikel.txt").getFile());
+    File eingabe = new File("Artikel.txt");
 
     try {
       Scanner scan = new Scanner(eingabe);
