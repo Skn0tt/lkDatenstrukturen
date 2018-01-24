@@ -1,1 +1,2 @@
-Nivea;C:\lkDatenstrukturen\WeltWirtschaftsSystem\res\images\Nivea.jpg;4005800001253;2.5;
+Pulmoll;/Users/skn0tt/Documents/dev/Schule/lkDatenstrukturen/WeltWirtschaftsSystem/res/images/Pulmoll.jpg;9783127725001;10.0;
+Schöningh;/Users/skn0tt/Documents/dev/Schule/lkDatenstrukturen/WeltWirtschaftsSystem/res/images/Pringles.jpg;9783140239035;20.0;

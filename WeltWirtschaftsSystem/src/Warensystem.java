@@ -133,39 +133,19 @@ public class Warensystem extends JFrame {
     cp.add(label1);
     btnLoeschen.setBounds(96, 456, 59, 30);
     btnLoeschen.setLabel("loeschen");
-    btnLoeschen.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnLoeschen_ActionPerformed(evt);
-        }
-      });
+    btnLoeschen.addActionListener(this::btnLoeschen_ActionPerformed);
     cp.add(btnLoeschen);
     setJMenuBar(menu);
     menu.add(datei);
     menu.add(bearbeiten);
     menu.add(hilfe);
-    DateiJMenuItem1.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          DateiJMenuItem1_ActionPerformed(evt);
-        }
-      });
+    DateiJMenuItem1.addActionListener(this::DateiJMenuItem1_ActionPerformed);
     datei.add(DateiJMenuItem1);
-    DateiJMenuItem2.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          DateiJMenuItem2_ActionPerformed(evt);
-        }
-      });
+    DateiJMenuItem2.addActionListener(this::DateiJMenuItem2_ActionPerformed);
     datei.add(DateiJMenuItem2);
-    BearbeitenJMenuItem1.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          BearbeitenJMenuItem1_ActionPerformed(evt);
-        }
-      });
+    BearbeitenJMenuItem1.addActionListener(this::BearbeitenJMenuItem1_ActionPerformed);
     bearbeiten.add(BearbeitenJMenuItem1);
-    HilfeJMenuItem1.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          HilfeJMenuItem1_ActionPerformed(evt);
-        }
-      });
+    HilfeJMenuItem1.addActionListener(this::HilfeJMenuItem1_ActionPerformed);
     hilfe.add(HilfeJMenuItem1);
 
     addWindowListener(new WindowAdapter() {
@@ -198,7 +178,7 @@ public class Warensystem extends JFrame {
       label3.setText("Preis: " + f.format(ware.getPreis()) + " Euro");
       lblImage.setIcon(new ImageIcon(ware.getBild()));
       EANgenerator(ware.getID());
-    }
+    } else { showError(); }
   }
 
   public void EANgenerator(String ean) {
@@ -276,8 +256,10 @@ public class Warensystem extends JFrame {
     boolean loeschen = dialog.getLoeschen();
 
     if (loeschen) {
-      warenliste.remove();
+      geloescht.push(warenliste.getContent());
       zeileLoeschen(warenliste.getContent().getID());
+      warenliste.remove();
+      refresh();
     }
   }
 
@@ -286,9 +268,14 @@ public class Warensystem extends JFrame {
     Warentyp ware = neu.getWare();
 
     if (ware != null) {
+      // Check if Ware already exists
+      warenliste.getByID(ware.getID());
+      if (warenliste.hasAccess()) { return; }
+
+      // Inser Ware
       warenliste.insert(ware);
-      refresh();
       zeileHinzufuegen(ware);
+      refresh();
     }
   }
 
@@ -296,7 +283,13 @@ public class Warensystem extends JFrame {
     System.exit(0);
   }
 
-  public void BearbeitenJMenuItem1_ActionPerformed(ActionEvent evt) {}
+  public void BearbeitenJMenuItem1_ActionPerformed(ActionEvent evt) {
+    Warentyp ware = geloescht.top();
+    warenliste.append(ware);
+    zeileHinzufuegen(ware);
+    geloescht.pop();
+    refresh();
+  }
 
   public void HilfeJMenuItem1_ActionPerformed(ActionEvent evt) {
     HilfeDialog hilfe = new HilfeDialog(this, "Über...", true);
@@ -339,8 +332,6 @@ public class Warensystem extends JFrame {
       writer.write(ware.getName() + ";" + ware.getBild() + ";" + ware.getID() +
                    ";" + ware.getPreis() + ";\r\n");
       writer.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
