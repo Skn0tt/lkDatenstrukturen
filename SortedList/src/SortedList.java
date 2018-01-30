@@ -71,7 +71,7 @@ public class SortedList<ContentType extends Sortable<ContentType>> extends List<
     this.toFirst();
     while (
       this.hasAccess() &&
-      this.getContent().getID().equals(pId)
+      !this.getContent().getID().equals(pId)
     ) { this.next(); }
   }
 
