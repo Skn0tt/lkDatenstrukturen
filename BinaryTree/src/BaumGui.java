@@ -225,6 +225,8 @@ public class BaumGui extends JFrame {
   } // end of btnTiefe_ActionPerformed
 
   public void btnBaumErstellen_ActionPerformed(ActionEvent evt) {
+    String preOrder = txtPreorderInput.getText();
+    String inOrder = txtInorderInput.getText();
     canvas1.zeichnen(tree);
   } // end of btnBaumErstellen_ActionPerformed
 

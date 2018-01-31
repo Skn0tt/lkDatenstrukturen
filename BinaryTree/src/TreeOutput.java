@@ -22,7 +22,7 @@ public class TreeOutput {
       .stream()
       .map(Object::toString)
       .collect(
-        Collectors.joining("\n")
+        Collectors.joining("; ")
       );
   }
   public static <T> String inOrder (BinaryTree<T> pTree) {
@@ -32,7 +32,7 @@ public class TreeOutput {
       .stream()
       .map(Object::toString)
       .collect(
-        Collectors.joining("\n")
+        Collectors.joining("; ")
       );
   }
   public static <T> String postOrder (BinaryTree<T> pTree) {
@@ -42,7 +42,7 @@ public class TreeOutput {
       .stream()
       .map(Object::toString)
       .collect(
-        Collectors.joining("\n")
+        Collectors.joining("; ")
       );
   }
 
@@ -50,13 +50,14 @@ public class TreeOutput {
     if (pTree.isEmpty()) { return 0; }
     return getNodeCount(pTree.getLeftTree()) + getNodeCount(pTree.getRightTree()) + 1;
   }
+
   public static <T> int getDepth(BinaryTree<T> pTree) {
     if (pTree.isEmpty()) { return 0; }
 
     int max = 0;
 
     final int leftDepth = getDepth(pTree.getLeftTree());
-    final int righDepth = getDepth(pTree.getLeftTree());
+    final int righDepth = getDepth(pTree.getRightTree());
 
     if (leftDepth > max) { max = leftDepth; }
     if (righDepth > max) { max = righDepth; }
