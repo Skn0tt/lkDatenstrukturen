@@ -7,9 +7,7 @@
  */
 public class Reconstruct{
     static <T> BinaryTree<T> preOrderInOrder(List<T> preOrder, List<T> inOrder) {
-        if (preOrder.isEmpty()) {
-            return new BinaryTree<>();
-        }
+        if (inOrder.isEmpty()) { return new BinaryTree<>(); }
 
         preOrder.toFirst();
         final T root = preOrder.getContent();
@@ -19,7 +17,7 @@ public class Reconstruct{
 
         // Construct Left Subtree
         inOrder.toFirst();
-        while (inOrder.hasAccess() && inOrder.getContent() != root) {
+        while (inOrder.hasAccess() && !inOrder.getContent().equals(root)) {
             inOrderLeft.append(inOrder.getContent());
             inOrder.remove();
         }
@@ -27,12 +25,10 @@ public class Reconstruct{
         // Skip Root
         inOrder.remove();
 
-        final BinaryTree<T> result = new BinaryTree<>(
+        return new BinaryTree<>(
                 root,
                 preOrderInOrder(preOrder, inOrderLeft),
                 preOrderInOrder(preOrder, inOrder) // inOrder is right subtree
         );
-
-        return result;
     }
 }

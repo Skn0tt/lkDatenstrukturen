@@ -4,6 +4,7 @@
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -71,42 +72,26 @@ public class BaumGui extends JFrame {
     btnZeichnen.setBounds(8, 488, 161, 49);
     btnZeichnen.setText("Zeichnen");
     btnZeichnen.setMargin(new Insets(2, 2, 2, 2));
-    btnZeichnen.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnZeichnen_ActionPerformed(evt);
-        }
-      });
+    btnZeichnen.addActionListener(this::btnZeichnen_ActionPerformed);
     btnZeichnen.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnZeichnen);
 
     btnPreorder.setBounds(8, 544, 161, 49);
     btnPreorder.setText("Preorder");
     btnPreorder.setMargin(new Insets(2, 2, 2, 2));
-    btnPreorder.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnPreorder_ActionPerformed(evt);
-        }
-      });
+    btnPreorder.addActionListener(this::btnPreorder_ActionPerformed);
     btnPreorder.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnPreorder);
     btnInorder.setBounds(8, 600, 161, 49);
     btnInorder.setText("Inorder");
     btnInorder.setMargin(new Insets(2, 2, 2, 2));
-    btnInorder.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnInorder_ActionPerformed(evt);
-        }
-      });
+    btnInorder.addActionListener(this::btnInorder_ActionPerformed);
     btnInorder.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnInorder);
     btnPostorder.setBounds(8, 656, 161, 49);
     btnPostorder.setText("Postorder");
     btnPostorder.setMargin(new Insets(2, 2, 2, 2));
-    btnPostorder.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnPostorder_ActionPerformed(evt);
-        }
-      });
+    btnPostorder.addActionListener(this::btnPostorder_ActionPerformed);
     btnPostorder.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnPostorder);
     lblPreorder.setBounds(176, 552, 435, 33);
@@ -126,11 +111,7 @@ public class BaumGui extends JFrame {
     btnKnotenAnzahl.setBounds(176, 488, 145, 49);
     btnKnotenAnzahl.setText("Z�hle Knoten");
     btnKnotenAnzahl.setMargin(new Insets(2, 2, 2, 2));
-    btnKnotenAnzahl.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnKnotenAnzahl_ActionPerformed(evt);
-        }
-      });
+    btnKnotenAnzahl.addActionListener(this::btnKnotenAnzahl_ActionPerformed);
     btnKnotenAnzahl.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnKnotenAnzahl);
     lblKnotenAnzahl.setBounds(328, 496, 107, 33);
@@ -141,11 +122,7 @@ public class BaumGui extends JFrame {
     btnTiefe.setBounds(448, 488, 161, 49);
     btnTiefe.setText("Bestimme Tiefe");
     btnTiefe.setMargin(new Insets(2, 2, 2, 2));
-    btnTiefe.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnTiefe_ActionPerformed(evt);
-        }
-      });
+    btnTiefe.addActionListener(this::btnTiefe_ActionPerformed);
     btnTiefe.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnTiefe);
     lblTiefe.setBounds(614, 496, 107, 33);
@@ -171,21 +148,17 @@ public class BaumGui extends JFrame {
     btnBaumErstellen.setBounds(688, 632, 385, 49);
     btnBaumErstellen.setText("Baum aus Traversierung ersellen");
     btnBaumErstellen.setMargin(new Insets(2, 2, 2, 2));
-    btnBaumErstellen.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnBaumErstellen_ActionPerformed(evt);
-        }
-      });
+    btnBaumErstellen.addActionListener(this::btnBaumErstellen_ActionPerformed);
     btnBaumErstellen.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnBaumErstellen);
     // Ende Komponenten
     setVisible(true);
 
     //Baum tree anlegen
-    BinaryTree<Integer> b1 = new BinaryTree<>(2, new BinaryTree<Integer>(43), null);
+    BinaryTree<Integer> b1 = new BinaryTree<>(2, new BinaryTree<>(43), null);
     BinaryTree<Integer> b2 = new BinaryTree<>(5);
     BinaryTree<Integer> b3 = new BinaryTree<>(7, b1, b2);
-    BinaryTree<Integer> b4 = new BinaryTree<>(8, null, new BinaryTree<Integer>(20));
+    BinaryTree<Integer> b4 = new BinaryTree<>(8, null, new BinaryTree<>(20));
     BinaryTree<Integer> b5 = new BinaryTree<>(4);
     BinaryTree<Integer> b6 = new BinaryTree<>(11, b4, b5);
     tree = new BinaryTree<>(14, b3, b6);
@@ -199,19 +172,19 @@ public class BaumGui extends JFrame {
   public void btnPreorder_ActionPerformed(ActionEvent evt) {
     // TODO hier Quelltext einf�gen
     String pre = TreeOutput.preOrder(tree);
-    lblPreorder.setText(pre.substring(0, pre.length() - 2));
+    lblPreorder.setText(pre);
   } // end of btnPreorder_ActionPerformed
 
   public void btnInorder_ActionPerformed(ActionEvent evt) {
     // TODO hier Quelltext einf�gen
     String in = TreeOutput.inOrder(tree);
-    lblInorder.setText(in.substring(0, in.length() - 2));
+    lblInorder.setText(in);
   } // end of btnInorder_ActionPerformed
 
   public void btnPostorder_ActionPerformed(ActionEvent evt) {
     // TODO hier Quelltext einf�gen
     String post = TreeOutput.postOrder(tree);
-    lblPostorder.setText(post.substring(0, post.length() - 2));
+    lblPostorder.setText(post);
   } // end of btnPostorder_ActionPerformed
 
   public void btnKnotenAnzahl_ActionPerformed(ActionEvent evt) {
@@ -227,6 +200,14 @@ public class BaumGui extends JFrame {
   public void btnBaumErstellen_ActionPerformed(ActionEvent evt) {
     String preOrder = txtPreorderInput.getText();
     String inOrder = txtInorderInput.getText();
+
+    List<Integer> preOrderList = new List<>();
+    List<Integer> inOrderList = new List<>();
+
+    for (String s : preOrder.split(",")) { preOrderList.append(Integer.parseInt(s)); }
+    for (String s : inOrder.split(",")) { inOrderList.append(Integer.parseInt(s)); }
+
+    this.tree = Reconstruct.preOrderInOrder(preOrderList, inOrderList);
     canvas1.zeichnen(tree);
   } // end of btnBaumErstellen_ActionPerformed
 
