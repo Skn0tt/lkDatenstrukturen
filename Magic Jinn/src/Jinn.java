@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,22 +82,35 @@ public class Jinn {
         aktuell.setContent(pFrage);
     }
 
-    private boolean isQuestion(String s) {
+    private static boolean isQuestion(String s) {
         return s.contains("?");
     }
 
-    public void load(List<String> s) {
-
+    public void load(ArrayList<String> s) {
+        this.ratebaum = traverse(s);
     }
 
-    private BinaryTree<String> traverse(List<String> s) {
-        if (!isQuestion(s.get(0))) {
-            return new BinaryTree<>(s.get(0));
-        }
+    private static <T> T pop(ArrayList<T> l) {
+        T result = l.get(0);
+        l.remove(0);
+        return result;
+    }
 
-        for (String v : s) {
+    private static BinaryTree<String> traverse(ArrayList<String> s) {
+        if (s.size() == 0) {
             return new BinaryTree<>();
         }
+        // If it is a leaf
+        if (!isQuestion(s.get(0))) {
+            return new BinaryTree<>(pop(s));
+        }
+
+        // If it is an inner node
+        return new BinaryTree<>(
+          pop(s),
+          traverse(s),
+          traverse(s)
+        );
     }
 
     // Anfang Methoden

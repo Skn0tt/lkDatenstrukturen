@@ -194,6 +194,7 @@ public class JinnGUI extends JFrame {
       try {
         FileWriter w = new FileWriter(dateiname);
         w.write("");
+        w.write(speichern(jinn.getRatebaum()));
         w.close();
       } catch (IOException e) {
         System.err.println(e.toString());
@@ -204,7 +205,7 @@ public class JinnGUI extends JFrame {
   } // end of btnSpeichern_ActionPerformed
 
   public String speichern(BinaryTree<String> bintree) {
-    return null;
+    return String.join("\n", Traverse.preOrder(jinn.getRatebaum()));
   }
 
   public BinaryTree laden() {
@@ -228,7 +229,7 @@ public class JinnGUI extends JFrame {
 
       reader.close();
 
-      jinn.load(Arrays.asList(ratebauminhalt.split(",")));
+      jinn.load(new ArrayList<>(Arrays.asList(ratebauminhalt.split("\n"))));
     } catch (IOException e) {
       System.err.println(e.toString());
     }
