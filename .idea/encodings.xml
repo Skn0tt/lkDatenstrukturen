@@ -2,6 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/BinaryTree/src/BaumGui.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Magic Jinn/src/Jinn.java" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/Magic Jinn/src/JinnGUI.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/Musikplayer/src/PlayerGUI.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/Musikplayer/src/Playlist.java" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/WeltWirtschaftsSystem/src/DialogNeu.java" charset="ISO-8859-1" />
