@@ -97,8 +97,12 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
       temp = temp.getRightTree();
     }
 
-    // Cleanup
-    previous.rightTree = null;
+    if (previous != tree) {
+      // Cleanup
+      previous.rightTree = null;
+    } else {
+      tree.leftTree = null;
+    }
 
     // Return found Value
     return temp.getContent();
@@ -117,8 +121,12 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
       temp = temp.getLeftTree();
     }
 
-    // Cleanup
-    previous.leftTree = null;
+    if (previous != tree) {
+      // Cleanup
+      previous.leftTree= null;
+    } else {
+      tree.rightTree = null;
+    }
 
     // Return found Value
     return temp.getContent();
@@ -139,7 +147,7 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
     } else if (tree.getRightTree() != null) {
       tree.setContent(rightStrategy(tree));
     } else {
-      this.setContent(null);
+      tree.setContent(null);
     }
   }
 }
