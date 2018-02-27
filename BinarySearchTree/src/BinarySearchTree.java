@@ -34,61 +34,94 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
   }
 
   public void insert(T item) {
-    if (item == null) {
-      return;
-    }
-
     if (this.isEmpty()) {
       setContent(item);
     }
 
-    if (content.isEqual(item)) {
-      return;
-    }
-
-    if (item.isLess(content)) {
-      if (leftTree == null) {
+    if (item.isLess(getContent())) {
+      if (getLeftTree() == null) {
         leftTree = new BinarySearchTree<>();
       }
 
       leftTree.insert(item);
+    } else if (content.isLess(item)) {
+      if (getRightTree() == null) {
+        rightTree = new BinarySearchTree<>();
+      }
+      rightTree.insert(item);
     }
-
-    if (rightTree == null) {
-      rightTree = new BinarySearchTree<>();
-    }
-
-    rightTree.insert(item);
   }
 
-  private BinarySearchTree<T> searchTree(T item) {
+  private static <T extends ComparableContent<T>> BinarySearchTree<T> searchTree(BinarySearchTree<T> tree, T item) {
     if (item == null) {
       return null;
     }
 
-    if (isEmpty()) {
+    if (tree == null) {
       return null;
     }
 
-    if (content.isEqual(item)) {
-      return this;
+    if (tree.isEmpty()) {
+      return null;
     }
 
-    BinarySearchTree<T> leftResult = leftTree.searchTree(item);
-    if (leftResult != null) {
-      return leftResult;
+    if (item.isLess(tree.getContent())) {
+      return searchTree(tree.getLeftTree(), item);
+    } else if (tree.getContent().isLess(item)) {
+      return searchTree(tree.getRightTree(), item);
+    } else {
+      return tree;
     }
-
-    BinarySearchTree<T> rightResult = rightTree.searchTree(item);
-    if (rightResult!= null) {
-      return rightResult;
-    }
-
-    return null;
   }
 
   public T search(T item) {
-    return searchTree(item).getContent();
+    BinarySearchTree<T> result = searchTree(this, item);
+
+    if (result == null) {
+      return null;
+    }
+
+    return result.getContent();
+  }
+
+  private T leftStrategy(BinarySearchTree<T> tree) {
+    BinarySearchTree<T> temp = tree;
+
+    // Step Left
+    temp = temp.getLeftTree();
+
+    BinarySearchTree<T> previous = tree;
+    // Step Right until not possible
+    while (temp.getRightTree() != null) {
+      previous = temp;
+      temp = temp.getRightTree();
+    }
+
+    // Cleanup
+    previous.rightTree = null;
+
+    // Return found Value
+    return temp.getContent();
+  }
+
+  private T rightStrategy(BinarySearchTree<T> tree) {
+    BinarySearchTree<T> temp = tree;
+
+    // Step Right
+    temp = temp.getRightTree();
+
+    BinarySearchTree<T> previous = tree;
+    // Step Left Until not possible
+    while (temp.getLeftTree() != null) {
+      previous = temp;
+      temp = temp.getLeftTree();
+    }
+
+    // Cleanup
+    previous.leftTree = null;
+
+    // Return found Value
+    return temp.getContent();
   }
 
   public void remove(T item) {
@@ -96,30 +129,17 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
       return;
     }
 
-    BinarySearchTree<T> found = searchTree(item);
-    if (found == null) {
+    BinarySearchTree<T> tree = searchTree(this, item);
+    if (tree == null) {
       return;
     }
 
-    BinarySearchTree<T> temp = this;
-    // Step Right
-    temp = temp.rightTree;
-
-    // Step left until no leftChild
-    while (temp.leftTree != null) {
-      temp = temp.leftTree;
+    if (tree.getLeftTree() != null) {
+      tree.setContent(leftStrategy(tree));
+    } else if (tree.getRightTree() != null) {
+      tree.setContent(rightStrategy(tree));
+    } else {
+      this.setContent(null);
     }
-
-    // Set to Current
-    content = temp.getContent();
-
-    // Remove
-    temp.content = null;
   }
-}
-
-interface ComparableContent<T> {
-  boolean isGreater(T than);
-  boolean isEqual(T than);
-  boolean isLess(T than);
 }
