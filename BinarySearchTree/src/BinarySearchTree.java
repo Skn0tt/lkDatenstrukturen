@@ -8,7 +8,7 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
   private BinarySearchTree<T> rightTree;
 
   /**
-   * Getter / Setter
+   * Beans
    */
   public T getContent() {
     return content;
@@ -26,127 +26,195 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
     this.content = item;
   }
 
-  /**
+  /*
    * Methods
+   */
+
+  /**
+   * @return if this Tree is empty
    */
   public boolean isEmpty() {
     return content == null;
   }
 
+  /**
+   * Inserts a new Item into the tree, keeping it sorted
+   * @param item to insert
+   */
   public void insert(T item) {
-    if (this.isEmpty()) {
-      setContent(item);
+    // rec-base
+    if (this.isEmpty()) { // if this is dangling
+      // insert item
+      this.setContent(item);
+
+      // create dangling trees
+      this.leftTree = new BinarySearchTree<>();
+      this.rightTree= new BinarySearchTree<>();
     }
 
-    if (item.isLess(getContent())) {
-      if (getLeftTree() == null) {
-        leftTree = new BinarySearchTree<>();
-      }
-
+    // rec-step
+    if (item.isLess(getContent())) { // if item is lower than content
       leftTree.insert(item);
-    } else if (content.isLess(item)) {
-      if (getRightTree() == null) {
-        rightTree = new BinarySearchTree<>();
-      }
+    } else if (getContent().isLess(item)) { // if item is higher than content
       rightTree.insert(item);
     }
+
+    // last case: item is equal to content:
+    // do nothing
   }
 
+  /**
+   * Helper Method
+   * Recursively searchs a specific tree
+   * @param tree to search through
+   * @param item to search for
+   * @return found tree, null if not found
+   */
   private static <T extends ComparableContent<T>> BinarySearchTree<T> searchTree(BinarySearchTree<T> tree, T item) {
-    if (item == null) {
+    // rec-base
+    if (tree.isEmpty()) { // if this is dangling, item is not in tree
       return null;
     }
 
-    if (tree == null) {
-      return null;
-    }
-
-    if (tree.isEmpty()) {
-      return null;
-    }
-
-    if (item.isLess(tree.getContent())) {
-      return searchTree(tree.getLeftTree(), item);
-    } else if (tree.getContent().isLess(item)) {
-      return searchTree(tree.getRightTree(), item);
-    } else {
+    // rec-step
+    if (item.isLess(tree.getContent())) { // item is lower than content
+      // search in left tree
+      return searchTree(
+        tree.getLeftTree(),
+        item
+      );
+    } else if (tree.getContent().isLess(item)) { // item is bigger than content
+      // search in right tree
+      return searchTree(
+        tree.getRightTree(),
+        item
+      );
+    } else { // item is equal to content
+      // found item
       return tree;
     }
   }
 
+  /**
+   * Searchs the tree for a given item in O(log n)
+   * @param item to search for
+   * @return found item; null if not in tree
+   */
   public T search(T item) {
-    BinarySearchTree<T> result = searchTree(this, item);
-
-    if (result == null) {
+    // validation
+    if (item == null) {
       return null;
     }
 
+    // search
+    BinarySearchTree<T> result = searchTree(this, item);
+
+    if (result == null) { // not found
+      return null;
+    }
+
+    // found
     return result.getContent();
   }
 
+  /**
+   * Helper method, finds subtree with biggest content lower than root.
+   * Deletes that subtree and returns it's value.
+   * @param tree to search
+   * @return value found
+   */
   private T leftStrategy(BinarySearchTree<T> tree) {
     BinarySearchTree<T> temp = tree;
 
-    // Step Left
+    // step left
     temp = temp.getLeftTree();
 
-    BinarySearchTree<T> previous = tree;
-    // Step Right until not possible
-    while (temp.getRightTree() != null) {
-      previous = temp;
+    // step right until not possible
+    while (
+      !temp.getRightTree().isEmpty() && // right tree exists
+      !temp.getRightTree().getRightTree().isEmpty() // right tree is not a leaf
+    ) {
       temp = temp.getRightTree();
     }
 
-    if (previous != tree) {
-      // Cleanup
-      previous.rightTree = null;
+    T value;
+    if (temp.getRightTree().isEmpty()) { // item is direct child
+      value = temp.getContent();
+
+      // remove
+      temp.setContent(null);
     } else {
-      tree.leftTree = null;
+      value = temp.getRightTree().getContent();
+
+      // remove
+      temp.getRightTree().setContent(null);
     }
 
-    // Return found Value
-    return temp.getContent();
+    // return found Value
+    return value;
   }
 
+  /**
+   * Helper method, finds subtree with smallest content bigger than root.
+   * Deletes that subtree and returns it's value.
+   * @param tree to search
+   * @return value found
+   */
   private T rightStrategy(BinarySearchTree<T> tree) {
     BinarySearchTree<T> temp = tree;
 
-    // Step Right
+    // step right
     temp = temp.getRightTree();
 
-    BinarySearchTree<T> previous = tree;
-    // Step Left Until not possible
-    while (temp.getLeftTree() != null) {
-      previous = temp;
+    // step left until not possible
+    while (
+      !temp.getLeftTree().isEmpty() && // left tree exists
+      !temp.getLeftTree().getLeftTree().isEmpty() // left tree is not a leaf
+    ) {
       temp = temp.getLeftTree();
     }
 
-    if (previous != tree) {
-      // Cleanup
-      previous.leftTree= null;
+    T value;
+    if (temp.getLeftTree().isEmpty()) { // item is direct child
+      value = temp.getContent();
+
+      // remove
+      temp.setContent(null);
     } else {
-      tree.rightTree = null;
+      value = temp.getLeftTree().getContent();
+
+      // remove
+      temp.getLeftTree().setContent(null);
     }
 
-    // Return found Value
-    return temp.getContent();
+    // return found value
+    return value;
   }
 
+  /**
+   * Removes item if it's in the tree
+   * keeps the tree sorted
+   * @param item to remove
+   */
   public void remove(T item) {
+    // validation
     if (item == null) {
       return;
     }
 
     BinarySearchTree<T> tree = searchTree(this, item);
-    if (tree == null) {
+    if (tree == null) { // item not found
       return;
     }
 
-    if (tree.getLeftTree() != null) {
+    if (!tree.getLeftTree().isEmpty()) { // left tree exists
+      // set content to biggest lower than current
       tree.setContent(leftStrategy(tree));
-    } else if (tree.getRightTree() != null) {
+    } else if (!tree.getRightTree().isEmpty()) { // right tree exits
+      // set content to lowest bigger than current
       tree.setContent(rightStrategy(tree));
-    } else {
+    } else { // leaf
+      // remove item
       tree.setContent(null);
     }
   }
