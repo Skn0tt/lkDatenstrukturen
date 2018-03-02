@@ -23,6 +23,16 @@ class BinarySearchTreeTest {
     }
 
     @Override
+    public boolean isEqual(Content than) {
+      return content == than.content;
+    }
+
+    @Override
+    public boolean isGreater(Content than) {
+      return content > than.content;
+    }
+
+    @Override
     public String toString() {
       return "" + content;
     }
@@ -41,15 +51,16 @@ class BinarySearchTreeTest {
     tree.insert(new Content(9));
     tree.insert(new Content(7));
     tree.insert(new Content(10));
+    tree.insert(new Content(11));
   }
 
   @Test
   void testSetUp() {
-    assertEquals(tree.getContent().content, 5);
-    assertEquals(tree.getLeftTree().getContent().content, 3);
-    assertEquals(tree.getLeftTree().getLeftTree().getContent().content, 1);
-    assertEquals(tree.getLeftTree().getRightTree().getContent().content, 4);
-    assertEquals(tree.getRightTree().getContent().content, 6);
+    assertEquals(5, tree.getContent().content);
+    assertEquals(3, tree.getLeftTree().getContent().content);
+    assertEquals(1, tree.getLeftTree().getLeftTree().getContent().content);
+    assertEquals(4, tree.getLeftTree().getRightTree().getContent().content);
+    assertEquals(6, tree.getRightTree().getContent().content);
   }
 
   @Test
@@ -78,7 +89,7 @@ class BinarySearchTreeTest {
 
   @Test
   void testSearchLeaf() {
-    assertEquals(tree.search(new Content(4)).content, 4);
+    assertEquals(4, tree.search(new Content(4)).content);
   }
 
   @Test
@@ -88,12 +99,12 @@ class BinarySearchTreeTest {
 
   @Test
   void testSearchInner() {
-    assertEquals(tree.search(new Content(3)).content, 3);
+    assertEquals(3, tree.search(new Content(3)).content);
   }
 
   @Test
   void testSearchRoot() {
-    assertEquals(tree.search(new Content(5)).content, 5);
+    assertEquals(5, tree.search(new Content(5)).content);
   }
 
   @Test
@@ -110,40 +121,50 @@ class BinarySearchTreeTest {
   @Test
   void testRemoveLeaf() {
     tree.remove(new Content(4));
-    assertEquals(tree.getContent().content, 5);
-    assertEquals(tree.getLeftTree().getContent().content, 3);
-    assertEquals(tree.getLeftTree().getLeftTree().getContent().content, 1);
+    assertEquals(5, tree.getContent().content);
+    assertEquals(3, tree.getLeftTree().getContent().content);
+    assertEquals(1, tree.getLeftTree().getLeftTree().getContent().content);
     assertTrue(tree.getLeftTree().getRightTree().isEmpty());
   }
 
   @Test
-  void testRemoveRootLeft() {
+  void testRemoveRoot() {
     tree.remove(new Content(5));
-    assertEquals(tree.getContent().content, 4);
-    assertEquals(tree.getLeftTree().getContent().content, 3);
-    assertEquals(tree.getLeftTree().getLeftTree().getContent().content, 1);
-    assertEquals(tree.getRightTree().getContent().content, 6);
+    assertTrue(tree.getLeftTree().getRightTree().isEmpty());
+    assertNull(tree.getLeftTree().getRightTree().getRightTree());
+    assertNull(tree.getLeftTree().getRightTree().getLeftTree());
+    assertEquals(4, tree.getContent().content);
+    assertEquals(3, tree.getLeftTree().getContent().content);
+    assertEquals(1, tree.getLeftTree().getLeftTree().getContent().content);
+    assertEquals(6, tree.getRightTree().getContent().content);
   }
 
   @Test
   void testRemoveRootRight() {
-    tree = tree.getRightTree();
-    tree.remove(new Content(6));
+    BinarySearchTree<Content> localTree = tree.getRightTree();
+    localTree.remove(new Content(6));
 
-    assertEquals(tree.getContent().content, 7);
-    assertEquals(tree.getRightTree().getContent().content, 9);
-    assertEquals(tree.getRightTree().getRightTree().getContent().content, 10);
-    assertTrue(tree.getRightTree().getLeftTree().isEmpty());
+    assertEquals(9, localTree.getContent().content);
+    assertEquals(7, localTree.getLeftTree().getContent().content);
+    assertTrue(localTree.getLeftTree().getLeftTree().isEmpty());
+    assertTrue(localTree.getLeftTree().getRightTree().isEmpty());
+    assertNull(localTree.getLeftTree().getRightTree().getLeftTree());
+    assertNull(localTree.getLeftTree().getRightTree().getRightTree());
+    assertNull(localTree.getLeftTree().getLeftTree().getLeftTree());
+    assertNull(localTree.getLeftTree().getLeftTree().getRightTree());
+    assertEquals(10, localTree.getRightTree().getContent().content);
+    assertEquals(11, localTree.getRightTree().getRightTree().getContent().content);
+    assertTrue(localTree.getRightTree().getLeftTree().isEmpty());
   }
 
   @Test
   void testRemoveInner() {
     tree.remove(new Content(3));
-    assertEquals(tree.getContent().content, 5);
-    assertEquals(tree.getLeftTree().getContent().content, 1);
-    assertEquals(tree.getLeftTree().getRightTree().getContent().content, 4);
+    assertEquals(5, tree.getContent().content);
+    assertEquals(1, tree.getLeftTree().getContent().content);
+    assertEquals(4, tree.getLeftTree().getRightTree().getContent().content);
     assertTrue(tree.getLeftTree().getLeftTree().isEmpty());
-    assertEquals(tree.getRightTree().getContent().content, 6);
+    assertEquals(6, tree.getRightTree().getContent().content);
   }
 
   @Test
@@ -174,12 +195,27 @@ class BinarySearchTreeTest {
     tree.remove(new Content(4));
   }
 
+  @Test
+  void testRemoveOnOnlyLeft() {
+    tree.remove(new Content(10));
+    assertEquals(11, tree.getRightTree().getRightTree().getRightTree().getContent().content);
+    assertTrue(tree.getRightTree().getRightTree().getRightTree().getRightTree().isEmpty());
+  }
+
+  @Test
+  void testRemoveOnOnlyLeft2() {
+    tree.remove(new Content(6));
+    assertEquals(9, tree.getRightTree().getContent().content);
+    assertEquals(7, tree.getRightTree().getLeftTree().getContent().content);
+    assertEquals(10, tree.getRightTree().getRightTree().getContent().content);
+  }
+
   @AfterEach
   void testSorted() {
     assertTrue(isSorted(tree));
   }
 
-  private <T extends ComparableContent<T>> boolean isSorted(BinarySearchTree<T> tree) {
+  private static <T extends ComparableContent<T>> boolean isSorted(BinarySearchTree<T> tree) {
     if (tree.isEmpty()) {
       return true;
     }

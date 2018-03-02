@@ -22,8 +22,16 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
     return rightTree;
   }
 
-  private void setContent(T item) {
-    this.content = item;
+  private void setContent(T to) {
+    this.content = to;
+  }
+
+  private void setLeftTree(BinarySearchTree<T> to) {
+    this.leftTree = to;
+  }
+
+  private void setRightTree(BinarySearchTree<T> to) {
+    this.rightTree = to;
   }
 
   /*
@@ -117,78 +125,11 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
     return result.getContent();
   }
 
-  /**
-   * Helper method, finds subtree with biggest content lower than root.
-   * Deletes that subtree and returns it's value.
-   * @param tree to search
-   * @return value found
-   */
-  private T leftStrategy(BinarySearchTree<T> tree) {
-    BinarySearchTree<T> temp = tree;
-
-    // step left
-    temp = temp.getLeftTree();
-
-    // step right until not possible
-    while (
-      !temp.getRightTree().isEmpty() && // right tree exists
-      !temp.getRightTree().getRightTree().isEmpty() // right tree is not a leaf
-    ) {
-      temp = temp.getRightTree();
+  private static <T extends ComparableContent<T>> BinarySearchTree<T> findMax(BinarySearchTree<T> tree) {
+    if (!tree.getRightTree().isEmpty()) {
+      return tree.getRightTree();
     }
-
-    T value;
-    if (temp.getRightTree().isEmpty()) { // item is direct child
-      value = temp.getContent();
-
-      // remove
-      temp.setContent(null);
-    } else {
-      value = temp.getRightTree().getContent();
-
-      // remove
-      temp.getRightTree().setContent(null);
-    }
-
-    // return found Value
-    return value;
-  }
-
-  /**
-   * Helper method, finds subtree with smallest content bigger than root.
-   * Deletes that subtree and returns it's value.
-   * @param tree to search
-   * @return value found
-   */
-  private T rightStrategy(BinarySearchTree<T> tree) {
-    BinarySearchTree<T> temp = tree;
-
-    // step right
-    temp = temp.getRightTree();
-
-    // step left until not possible
-    while (
-      !temp.getLeftTree().isEmpty() && // left tree exists
-      !temp.getLeftTree().getLeftTree().isEmpty() // left tree is not a leaf
-    ) {
-      temp = temp.getLeftTree();
-    }
-
-    T value;
-    if (temp.getLeftTree().isEmpty()) { // item is direct child
-      value = temp.getContent();
-
-      // remove
-      temp.setContent(null);
-    } else {
-      value = temp.getLeftTree().getContent();
-
-      // remove
-      temp.getLeftTree().setContent(null);
-    }
-
-    // return found value
-    return value;
+    return tree;
   }
 
   /**
@@ -207,15 +148,36 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
       return;
     }
 
-    if (!tree.getLeftTree().isEmpty()) { // left tree exists
-      // set content to biggest lower than current
-      tree.setContent(leftStrategy(tree));
-    } else if (!tree.getRightTree().isEmpty()) { // right tree exits
-      // set content to lowest bigger than current
-      tree.setContent(rightStrategy(tree));
-    } else { // leaf
-      // remove item
+    if (
+      tree.getLeftTree().isEmpty() && tree.getRightTree().isEmpty() // is Leaf
+    ) {
+      // just make this tree dangling
       tree.setContent(null);
+      tree.setLeftTree(null);
+      tree.setRightTree(null);
+    } else if (
+      !tree.getLeftTree().isEmpty() ^ !tree.getRightTree().isEmpty() // exactly one of left, right exists
+    ) {
+      // find existing one of left, right
+      BinarySearchTree<T> existingTree =
+          !tree.getLeftTree().isEmpty()
+            ? tree.getLeftTree()
+            : tree.getRightTree();
+
+      // set current tree to existing tree
+      tree.setContent(existingTree.getContent());
+      tree.setLeftTree(existingTree.getLeftTree());
+      tree.setRightTree(existingTree.getRightTree());
+    } else { // left and right exists
+      // find max in left tree
+      BinarySearchTree<T> maxInLeftTree = findMax(tree.getLeftTree());
+
+      // set current content to max in left tree
+      // will keep the tree sorted
+      tree.setContent(maxInLeftTree.getContent());
+
+      // remove max in found tree
+      maxInLeftTree.remove(maxInLeftTree.getContent());
     }
   }
 }
