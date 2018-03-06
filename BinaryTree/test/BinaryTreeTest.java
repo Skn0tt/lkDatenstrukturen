@@ -8,6 +8,63 @@ import static org.testng.Assert.*;
 
 public class BinaryTreeTest {
 
+  /**
+   * Constructor
+   */
+  @Test
+  public void testConstructorEmpty() {
+    BinaryTree<Integer> tree = new BinaryTree<>();
+    assertNull(tree.getLeftTree());
+    assertNull(tree.getRightTree());
+  }
+
+  @Test
+  public void testConstructorWithRoot() {
+    BinaryTree<Integer> tree = new BinaryTree<>(1);
+    assertNull(tree.getLeftTree().getLeftTree());
+    assertNull(tree.getLeftTree().getRightTree());
+    assertNull(tree.getRightTree().getLeftTree());
+    assertNull(tree.getRightTree().getRightTree());
+  }
+
+  @Test
+  public void testConstructorWithRootOnNull() {
+    BinaryTree<Integer> tree = new BinaryTree<>(null);
+    assertNull(tree.getLeftTree());
+    assertNull(tree.getRightTree());
+  }
+
+  @Test
+  public void testConstructorWithRootAndBranches() {
+    BinaryTree<Integer> left = new BinaryTree<>(2);
+    BinaryTree<Integer> right = new BinaryTree<>(3);
+    BinaryTree<Integer> tree = new BinaryTree<>(1, left, right);
+    assertEquals(tree.getLeftTree().getContent().intValue(), 2);
+    assertEquals(tree.getRightTree().getContent().intValue(), 3);
+
+    assertSame(tree.getLeftTree(), left);
+    assertSame(tree.getRightTree(), right);
+
+    assertNull(tree.getLeftTree().getLeftTree().getLeftTree());
+    assertNull(tree.getLeftTree().getLeftTree().getRightTree());
+    assertNull(tree.getLeftTree().getRightTree().getLeftTree());
+    assertNull(tree.getLeftTree().getRightTree().getRightTree());
+    assertNull(tree.getRightTree().getLeftTree().getLeftTree());
+    assertNull(tree.getRightTree().getLeftTree().getRightTree());
+    assertNull(tree.getRightTree().getRightTree().getLeftTree());
+    assertNull(tree.getRightTree().getRightTree().getRightTree());
+  }
+
+  @Test
+  public void testConstructorWithRootAndBranchesOnNull() {
+    BinaryTree<Integer> left = new BinaryTree<>(2);
+    BinaryTree<Integer> right = new BinaryTree<>(3);
+    BinaryTree<Integer> tree = new BinaryTree<>(null, left, right);
+
+    assertNull(tree.getLeftTree());
+    assertNull(tree.getRightTree());
+  }
+
   /*
    * isEmpty()
    */
@@ -97,22 +154,58 @@ public class BinaryTreeTest {
    * setLeftTree() / setRightTree()
    */
   @Test
-  public void testSetLeftRightTree() {
+  public void testSetLeftTree() {
+    BinaryTree<Integer> tree = new BinaryTree<>(2);
+
+    BinaryTree<Integer> left = new BinaryTree<>(1);
+    tree.setLeftTree(left);
+
+    assertEquals(tree.getLeftTree().getContent().intValue(), 1);
+    assertSame(tree.getLeftTree(), left);
+  }
+
+  @Test
+  public void testSetRightTree() {
+    BinaryTree<Integer> tree = new BinaryTree<>(1);
+
+    BinaryTree<Integer> right = new BinaryTree<>(2);
+    tree.setRightTree(right);
+
+    assertEquals(tree.getRightTree().getContent().intValue(), 2);
+    assertSame(tree.getRightTree(), right);
+  }
+
+  @Test
+  public void testSetRightTreeOnEmpty() {
     BinaryTree<Integer> tree = new BinaryTree<>();
 
     assertTrue(tree.isEmpty());
-    assertNull(tree.getLeftTree());
     assertNull(tree.getRightTree());
 
-    BinaryTree<Integer> left = new BinaryTree<>(1);
     BinaryTree<Integer> right = new BinaryTree<>(2);
-    tree.setLeftTree(left);
     tree.setRightTree(right);
 
-    assertEquals(tree.getLeftTree().getContent().intValue(), 1);
-    assertEquals(tree.getRightTree().getContent().intValue(), 2);
+    assertNull(tree.getRightTree());
     assertTrue(tree.isEmpty());
-    assertSame(tree.getLeftTree(), left);
-    assertSame(tree.getRightTree(), right);
+  }
+
+  @Test
+  public void testSetLeftTreeOnNull() {
+    BinaryTree<Integer> tree = new BinaryTree<>(5);
+
+    tree.setLeftTree(null);
+
+    assertNull(tree.getLeftTree().getLeftTree());
+    assertNull(tree.getLeftTree().getRightTree());
+  }
+
+  @Test
+  public void testSetRightTreeOnNull() {
+    BinaryTree<Integer> tree = new BinaryTree<>(5);
+
+    tree.setRightTree(null);
+
+    assertNull(tree.getRightTree().getLeftTree());
+    assertNull(tree.getRightTree().getRightTree());
   }
 }

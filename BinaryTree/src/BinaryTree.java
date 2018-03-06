@@ -35,7 +35,7 @@ public class BinaryTree<ContentType> {
     if (leftTree == null) { this.leftTree = new BinaryTree<>(); }
     else { this.leftTree = leftTree; }
 
-    if (rightTree == null) { this.rightTree= new BinaryTree<>(); }
+    if (rightTree == null) { this.rightTree = new BinaryTree<>(); }
     else { this.rightTree = rightTree; }
   }
 
@@ -63,6 +63,12 @@ public class BinaryTree<ContentType> {
   }
 
   public void setLeftTree(BinaryTree<ContentType> leftTree) {
+    if (leftTree == null) {
+      return;
+    }
+    if (this.isEmpty()) {
+      return;
+    }
     this.leftTree = leftTree;
   }
 
@@ -71,6 +77,13 @@ public class BinaryTree<ContentType> {
   }
 
   public void setRightTree(BinaryTree<ContentType> rightTree) {
+    if (rightTree == null) {
+      return;
+    }
+    if (this.isEmpty()) {
+      return;
+    }
+
     this.rightTree = rightTree;
   }
 }
