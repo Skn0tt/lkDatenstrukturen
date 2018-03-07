@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Simon Knott 2018.
+ */
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -39,6 +43,7 @@ public class BaumGui extends JFrame {
   private ImageIcon btnPlayIcon = new ImageIcon(this.getClass()
                                                     .getResource("images/play.png"));
 
+  private Morsebaum morsebaum = new Morsebaum();
   // Ende Attribute
   public BaumGui(String title) {
     // Frame-Initialisierung
@@ -119,19 +124,19 @@ public class BaumGui extends JFrame {
 
   // Anfang Methoden
   public void btnKlarToMorse_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen  
+    this.jtAMorsecode.setText(morsebaum.codiere(this.jtAKlartext.getText()));
     // Klartext in Morsetext umwandeln
     
   } // end of btnKlarToMorse_ActionPerformed
 
   public void btnMorseToKlar_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
+    this.jtAKlartext.setText(morsebaum.decodiere(this.jtAMorsecode.getText()));
     // Morsetext in Morsecode umwandeln
     
   } // end of btnMorseToKlar_ActionPerformed
 
   public void btnPlay_ActionPerformed(ActionEvent evt) {
-    // TODO hier Quelltext einfügen
+    //TODO: Do
     // Morsecode abspielen
   } // end of btnPlay_ActionPerformed
 

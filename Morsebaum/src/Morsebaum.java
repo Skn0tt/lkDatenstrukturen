@@ -1,7 +1,14 @@
+/*
+ * Copyright (c) Simon Knott 2018.
+ */
+
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 /**
   *
   * Die Klasse enthaelt Informationen des Morsealphabets in Form eines
-  * binaeren Baums. Mithilfe der Klasse können Morsezeichen und Klartextzeichen
+  * binaeren Baums. Mithilfe der Klasse kï¿½nnen Morsezeichen und Klartextzeichen
   * jeweils ineinander ueberfuehrt werden.
   *
   * @version 2018-03-18
@@ -17,11 +24,11 @@ public class Morsebaum {
     BinaryTree<Character> lBaum4Rechts = new BinaryTree<>(new Character('V'));
     BinaryTree<Character> lBaum3Links = new BinaryTree<>(new Character('S'),lBaum4Links, lBaum4Rechts);
     lBaum4Links = new BinaryTree<>(new Character('F'));
-    lBaum4Rechts = new BinaryTree<>(new Character('Ü'));
+    lBaum4Rechts = new BinaryTree<>(new Character('ï¿½'));
     BinaryTree<Character> lBaum3Rechts = new BinaryTree<>(new Character('U'), lBaum4Links, lBaum4Rechts);
     BinaryTree<Character> lBaum2Links = new BinaryTree<>(new Character('I'), lBaum3Links, lBaum3Rechts);
     lBaum4Links = new BinaryTree<>(new Character('L'));
-    lBaum4Rechts = new BinaryTree<>(new Character('Ä'));
+    lBaum4Rechts = new BinaryTree<>(new Character('ï¿½'));
     lBaum3Links = new BinaryTree<>(new Character('R'), lBaum4Links, lBaum4Rechts);
     lBaum4Links = new BinaryTree<>(new Character('P'));
     lBaum4Rechts = new BinaryTree<>(new Character('J'));
@@ -38,7 +45,7 @@ public class Morsebaum {
     lBaum4Links = new BinaryTree<>(new Character('Q'));
     lBaum4Rechts = new BinaryTree<>(new Character('Z'));
     lBaum3Links = new BinaryTree<>(new Character('G'), lBaum4Links, lBaum4Rechts);
-    lBaum4Links = new BinaryTree<>(new Character('Ö'));
+    lBaum4Links = new BinaryTree<>(new Character('ï¿½'));
     lBaum4Rechts = new BinaryTree<>(new Character('@'));
     lBaum3Rechts = new BinaryTree<>(new Character('O'),lBaum4Links, lBaum4Rechts);
     lBaum2Rechts = new BinaryTree<>(new Character('M'), lBaum3Links, lBaum3Rechts);
@@ -50,21 +57,84 @@ public class Morsebaum {
   // Anfang Methoden
 
   
-  public char decodiereBuchstabe(String pCode){
-    // TODO hier Quelltext einfügen
-    return 'a';
-  }
-  
+  public String decodiereBuchstabe(String pCode){
+    BinaryTree<Character> tree = getBaum();
 
+    if (pCode.equals("##")) {
+      return " ";
+    }
+
+    if (pCode.equals("#")) {
+      return "";
+    }
+
+    for (char c : pCode.trim().toCharArray()) {
+      switch (c) {
+        case '.':
+          tree = tree.getLeftTree();
+          break;
+        case '-':
+          tree = tree.getRightTree();
+          break;
+        default:
+          throw new IllegalArgumentException("Don't know character...");
+      }
+    }
+
+    return tree.getContent().toString();
+  }
   
   public String codiereBuchstabe(char pChar){
-    // TODO hier Quelltext einfügen
-    return null;
+    return codiereBuchstabe(pChar, getBaum(), "");
   }
 
+  public String codiere(String klar) {
+    StringBuilder result = new StringBuilder();
+
+    char[] chars = klar.toUpperCase().toCharArray();
+
+    for (char c : chars) {
+      if (c == ' ') {
+        result.append(" ## ");
+      } else {
+        result.append(codiereBuchstabe(c));
+        result.append(" # ");
+      }
+    }
+
+    return result.toString();
+  }
+
+  public String decodiere(String morse) {
+    StringBuilder result = new StringBuilder();
+
+    String[] chars = morse.split(" ");
+
+    for (String c : chars) {
+      result.append(decodiereBuchstabe(c));
+    }
+
+    return result.toString();
+  }
   
-  private String codiereBuchstabe(char pChar, BinaryTree<Character> baum){
-    // TODO hier Quelltext einfügen
+  private String codiereBuchstabe(char pChar, BinaryTree<Character> baum, String code){
+    if (baum.isEmpty()) {
+      return null;
+    }
+    if (baum.getContent() == pChar) {
+      return code;
+    }
+
+    String resultLeft = codiereBuchstabe(pChar, baum.getLeftTree(), code);
+    if (resultLeft != null) {
+      return resultLeft + ".";
+    }
+
+    String resultRight = codiereBuchstabe(pChar, baum.getRightTree(), code);
+    if (resultRight != null) {
+      return resultRight + "-";
+    }
+
     return null;
   }
 
