@@ -127,7 +127,7 @@ public class BinarySearchTree<T extends ComparableContent<T>> {
 
   private static <T extends ComparableContent<T>> BinarySearchTree<T> findMax(BinarySearchTree<T> tree) {
     if (!tree.getRightTree().isEmpty()) {
-      return tree.getRightTree();
+      return findMax(tree.getRightTree());
     }
     return tree;
   }
