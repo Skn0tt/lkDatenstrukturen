@@ -29,6 +29,9 @@ public class Transcriptor {
   });;
 
   private Thread recorder = new Thread(() -> {
+    // Make Observable "Hot"
+    input.publish();
+
     // format of audio file
     AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
 
@@ -76,47 +79,54 @@ public class Transcriptor {
   });
 
   /**
-   * # Constructor
+   * # Reactive Functions
    */
-  public Transcriptor() {
-    input.publish();
-
+  private Thread analyzer = new Thread(() -> {
     Observable<Integer> ints = input
       .map(toInt)
       .map(Math::abs);
 
-    Observable<Boolean> on = ints.map(threshhold);
+    Observable<Boolean> onOff = ints.map(threshhold);
 
-    Observable<Boolean> distinct = on.distinctUntilChanged(compareBoolean);
+    Observable<Boolean> distinct = onOff.distinctUntilChanged(compareBoolean);
 
-    distinct
-      .timeInterval()
-      .filter(isLongEnough)
-      .map(toCode)
-      .subscribe(System.out::print);
-  }
+    // distinct.subscribe(System.out::println);
 
-  /**
-   * # Reactive Functions
-   */
-  Function<byte[], Integer> toInt = bytes -> bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+    Observable<Timed<Boolean>> timed = distinct.timeInterval();
 
-  Function<Integer, Boolean> threshhold = v -> v > 5000000;
+    timed.subscribe(v -> System.out.println(v.value() + " " + v.time()));
 
-  BiPredicate<Boolean, Boolean> compareBoolean = (a, b) -> a == b;
+    Observable<String> codes = timed.map(toCode);
 
-  Predicate<Timed<Boolean>> isLongEnough = timed -> timed.time() > 50;
+    /*
+    Observable<Boolean> longEnough = timed.filter(isLongEnough).map(Timed::value);
 
-  Predicate<Long> isLong = time -> time > 300;
+    Observable<Timed<Boolean>> finalEvents = longEnough.timeInterval();
 
-  Function<Timed<Boolean>, Character> toCode = v -> {
-    if (v.value()) {
-      if (isLong.test(v.time(TimeUnit.MILLISECONDS))) { return '-'; }
+    // finalEvents.subscribe(v -> System.out.println(v.time(TimeUnit.MILLISECONDS) + " " + v.value()));
 
-      return '*';
+    Observable<Character> codes = finalEvents.map(toCode);
+    */
+
+    codes.subscribe(System.out::print);
+  });
+
+  private static Function<byte[], Integer> toInt = bytes -> bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+
+  private static Function<Integer, Boolean> threshhold = v -> v > 120000000;
+
+  private static BiPredicate<Boolean, Boolean> compareBoolean = (a, b) -> a == b;
+
+  private static Predicate<Timed> isLong = v -> v.time(TimeUnit.MILLISECONDS) > 300;
+
+  private static Predicate<Timed> isDivider = v -> v.time(TimeUnit.MILLISECONDS) > 500;
+
+  private static Function<Timed<Boolean>, String> toCode = v -> {
+    if (!v.value()) { // mic was off -> it's a sign
+      return isLong.test(v) ? " -" : " *";
+    } else { // mic was on -> it's a break
+      return isDivider.test(v) ? " #" : "";
     }
-
-    return '#';
   };
 
   /**
@@ -125,6 +135,8 @@ public class Transcriptor {
 
   public void start() {
     recorder.start();
+
+    analyzer.start();
   }
 
   public void stop() {
@@ -135,15 +147,5 @@ public class Transcriptor {
     Transcriptor t = new Transcriptor();
 
     t.start();
-
-    Thread.sleep(100);
-
-    t.stop();
-
-    Thread.sleep(100);
-
-    int x = 1;
-
-
   }
 }
