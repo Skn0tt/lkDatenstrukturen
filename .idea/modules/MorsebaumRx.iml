@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.system.id="GRADLE" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="MorsebaumRx" external.linked.project.path="$MODULE_DIR$/../../MorsebaumRx" external.root.project.path="$MODULE_DIR$/../../MorsebaumRx" external.system.id="GRADLE" external.system.module.group="MorsebaumRx" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../MorsebaumRx">
-      <sourceFolder url="file://$MODULE_DIR$/../../MorsebaumRx/src/main/res" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/../../MorsebaumRx/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../MorsebaumRx/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../MorsebaumRx/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

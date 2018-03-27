@@ -41,6 +41,8 @@ public class BaumGui extends JFrame {
                                                     .getResource("images/play.png"));
 
   private Morsebaum morsebaum = new Morsebaum();
+
+  Transcriptor t;
   // Ende Attribute
   public BaumGui(String title) {
     // Frame-Initialisierung
@@ -69,11 +71,7 @@ public class BaumGui extends JFrame {
     btnKlarToMorse.setBounds(352, 376, 161, 49);
     btnKlarToMorse.setText(">>");
     btnKlarToMorse.setMargin(new Insets(2, 2, 2, 2));
-    btnKlarToMorse.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnKlarToMorse_ActionPerformed(evt);
-        }
-      });
+    btnKlarToMorse.addActionListener(this::btnKlarToMorse_ActionPerformed);
     btnKlarToMorse.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnKlarToMorse);
     lKlartext.setBounds(8, 344, 334, 30);
@@ -89,11 +87,7 @@ public class BaumGui extends JFrame {
     btnMorseToKlar.setBounds(352, 432, 161, 49);
     btnMorseToKlar.setText("<<");
     btnMorseToKlar.setMargin(new Insets(2, 2, 2, 2));
-    btnMorseToKlar.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnMorseToKlar_ActionPerformed(evt);
-        }
-      });
+    btnMorseToKlar.addActionListener(this::btnMorseToKlar_ActionPerformed);
     btnMorseToKlar.setFont(new Font("Calibri", Font.BOLD, 22));
     cp.add(btnMorseToKlar);
     jtAKlartextScrollPane.setBounds(8, 376, 336, 108);
@@ -107,11 +101,7 @@ public class BaumGui extends JFrame {
     btnPlay.setBounds(816, 344, 35, 33);
     btnPlay.setText("");
     btnPlay.setMargin(new Insets(2, 2, 2, 2));
-    btnPlay.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-          btnPlay_ActionPerformed(evt);
-        }
-      });
+    btnPlay.addActionListener(this::btnPlay_ActionPerformed);
     btnPlay.setIcon(btnPlayIcon);
     cp.add(btnPlay);
     // Ende Komponenten
@@ -133,8 +123,15 @@ public class BaumGui extends JFrame {
   } // end of btnMorseToKlar_ActionPerformed
 
   public void btnPlay_ActionPerformed(ActionEvent evt) {
-    //TODO: Do
-    // Morsecode abspielen
+    if (t != null) {
+      t.stop();
+    }
+
+    t = new Transcriptor();
+
+    t.registerListener(code -> this.jtAMorsecode.setText(this.jtAMorsecode.getText() + code));
+
+    t.start();
   } // end of btnPlay_ActionPerformed
 
   // Ende Methoden

@@ -8,10 +8,9 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Timed;
 
-import javax.sound.midi.SysexMessage;
 import javax.sound.sampled.*;
-import java.awt.*;
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -23,10 +22,12 @@ public class Transcriptor {
   private Consumer<byte[]> read;
   private Thunk complete;
 
+  private List<Consumer<String>> listeners = new ArrayList<>();
+
   private Observable<byte[]> input = Observable.create(emitter -> {
     this.read = emitter::onNext;
     this.complete = emitter::onComplete;
-  });;
+  });
 
   private Thread recorder = new Thread(() -> {
     // Make Observable "Hot"
@@ -98,17 +99,9 @@ public class Transcriptor {
 
     Observable<String> codes = timed.map(toCode);
 
-    /*
-    Observable<Boolean> longEnough = timed.filter(isLongEnough).map(Timed::value);
-
-    Observable<Timed<Boolean>> finalEvents = longEnough.timeInterval();
-
-    // finalEvents.subscribe(v -> System.out.println(v.time(TimeUnit.MILLISECONDS) + " " + v.value()));
-
-    Observable<Character> codes = finalEvents.map(toCode);
-    */
-
-    codes.subscribe(System.out::print);
+    codes.subscribe(code -> {
+      listeners.forEach(consumer -> consumer.accept(code));
+    });
   });
 
   private static Function<byte[], Integer> toInt = bytes -> bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
@@ -143,8 +136,14 @@ public class Transcriptor {
     recorder.interrupt();
   }
 
+  public void registerListener(Consumer<String> listener) {
+    this.listeners.add(listener);
+  }
+
   public static void main(String... args) throws InterruptedException {
     Transcriptor t = new Transcriptor();
+
+    t.registerListener(System.out::print);
 
     t.start();
   }

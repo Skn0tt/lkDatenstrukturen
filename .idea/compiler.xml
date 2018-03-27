@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="Morsebaum_main" target="1.8" />
       <module name="Morsebaum_test" target="1.8" />
+      <module name="MorsebaumRx_main" target="1.8" />
+      <module name="MorsebaumRx_test" target="1.8" />
       <module name="Testing_main" target="1.8" />
       <module name="Testing_test" target="1.8" />
     </bytecodeTargetLevel>
