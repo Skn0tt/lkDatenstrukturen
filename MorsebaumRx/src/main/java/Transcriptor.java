@@ -7,6 +7,8 @@ import io.reactivex.functions.BiPredicate;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Timed;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 import javax.sound.sampled.*;
 import java.util.ArrayList;
@@ -15,19 +17,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class Transcriptor {
-  interface Thunk {
-    void call();
-  }
-
-  private Consumer<byte[]> read;
-  private Thunk complete;
-
   private List<Consumer<String>> listeners = new ArrayList<>();
 
-  private Observable<byte[]> input = Observable.create(emitter -> {
-    this.read = emitter::onNext;
-    this.complete = emitter::onComplete;
-  });
+  private Subject<byte[]> input = PublishSubject.create();
 
   private Thread recorder = new Thread(() -> {
     // Make Observable "Hot"
@@ -64,7 +56,7 @@ public class Transcriptor {
       // start recording
       while (true) {
         if (Thread.interrupted()) {
-          complete.call();
+          input.onComplete();
           break;
         }
 
@@ -72,7 +64,7 @@ public class Transcriptor {
 
         if (numBytesRead == -1)	break;
 
-        read.accept(targetData);
+        input.onNext(targetData);
       }
     } catch (LineUnavailableException ex) {
       ex.printStackTrace();
@@ -95,7 +87,7 @@ public class Transcriptor {
 
     Observable<Timed<Boolean>> timed = distinct.timeInterval();
 
-    timed.subscribe(v -> System.out.println(v.value() + " " + v.time()));
+    // timed.subscribe(v -> System.out.println(v.value() + " " + v.time()));
 
     Observable<String> codes = timed.map(toCode);
 
@@ -125,7 +117,6 @@ public class Transcriptor {
   /**
    * # Interface
    */
-
   public void start() {
     recorder.start();
 
