@@ -83,11 +83,9 @@ public class Transcriptor {
 
     Observable<Boolean> distinct = onOff.distinctUntilChanged(compareBoolean);
 
-    // distinct.subscribe(System.out::println);
+    Observable<Boolean> debounced = distinct.debounce(20, TimeUnit.MILLISECONDS);
 
-    Observable<Timed<Boolean>> timed = distinct.timeInterval();
-
-    // timed.subscribe(v -> System.out.println(v.value() + " " + v.time()));
+    Observable<Timed<Boolean>> timed = debounced.timeInterval();
 
     Observable<String> codes = timed.map(toCode);
 
@@ -102,15 +100,15 @@ public class Transcriptor {
 
   private static BiPredicate<Boolean, Boolean> compareBoolean = (a, b) -> a == b;
 
-  private static Predicate<Timed> isLong = v -> v.time(TimeUnit.MILLISECONDS) > 300;
+  private static Predicate<Timed> isLong = v -> v.time(TimeUnit.MILLISECONDS) > 200;
 
-  private static Predicate<Timed> isDivider = v -> v.time(TimeUnit.MILLISECONDS) > 500;
+  private static Predicate<Timed> isDivider = v -> v.time(TimeUnit.MILLISECONDS) > 750;
 
   private static Function<Timed<Boolean>, String> toCode = v -> {
     if (!v.value()) { // mic was off -> it's a sign
-      return isLong.test(v) ? " -" : " *";
+      return isLong.test(v) ? "-" : ".";
     } else { // mic was on -> it's a break
-      return isDivider.test(v) ? " #" : "";
+      return isDivider.test(v) ? " # " : "";
     }
   };
 
