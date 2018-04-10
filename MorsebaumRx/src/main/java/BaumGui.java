@@ -7,7 +7,6 @@ import javazoom.jl.player.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 /**
@@ -36,9 +35,11 @@ public class BaumGui extends JFrame {
   private JScrollPane jtAKlartextScrollPane = new JScrollPane(jtAKlartext);
   private JTextArea jtAMorsecode = new JTextArea("");
   private JScrollPane jtAMorsecodeScrollPane = new JScrollPane(jtAMorsecode);
-  private JButton btnPlay = new JButton();
-  private ImageIcon btnPlayIcon = new ImageIcon(this.getClass()
-                                                    .getResource("images/play.png"));
+  private JButton btnRecord = new JButton();
+  private ImageIcon btnStopIcon = new ImageIcon(this.getClass().getResource("images/stop.png"));
+  private ImageIcon btnRecordIcon = new ImageIcon(this.getClass().getResource("images/record.png"));
+
+  private boolean isRecording = false;
 
   private Morsebaum morsebaum = new Morsebaum();
 
@@ -98,16 +99,20 @@ public class BaumGui extends JFrame {
     cp.add(jtAMorsecodeScrollPane);
     canvas.setBounds(8, 64, 849, 273);
     lblMorsecode.setBounds(520, 344, 334, 30);
-    btnPlay.setBounds(816, 344, 35, 33);
-    btnPlay.setText("");
-    btnPlay.setMargin(new Insets(2, 2, 2, 2));
-    btnPlay.addActionListener(this::btnPlay_ActionPerformed);
-    btnPlay.setIcon(btnPlayIcon);
-    cp.add(btnPlay);
+    btnRecord.setBounds(816, 344, 35, 33);
+    btnRecord.setText("");
+    btnRecord.setMargin(new Insets(2, 2, 2, 2));
+    btnRecord.addActionListener(this::btnPlay_ActionPerformed);
+    btnRecord.setIcon(btnRecordIcon);
+    cp.add(btnRecord);
     // Ende Komponenten
     setVisible(true);
     this.canvas.zeichnen(morsebaum.getBaum());
   } // end of public Test
+
+  /**
+   * # Handlers
+   */
 
   // Anfang Methoden
   public void btnKlarToMorse_ActionPerformed(ActionEvent evt) {
@@ -123,6 +128,22 @@ public class BaumGui extends JFrame {
   } // end of btnMorseToKlar_ActionPerformed
 
   public void btnPlay_ActionPerformed(ActionEvent evt) {
+    if (isRecording) {
+      this.isRecording = false;
+      stopRecording();
+      btnRecord.setIcon(btnRecordIcon);
+    } else {
+      this.isRecording = true;
+      startRecording();
+      btnRecord.setIcon(btnStopIcon);
+    }
+  } // end of btnPlay_ActionPerformed
+
+  /**
+   * # Logic
+   */
+  void startRecording() {
+    // Start Transcriptor
     if (t != null) {
       t.stop();
     }
@@ -132,7 +153,11 @@ public class BaumGui extends JFrame {
     t.registerListener(code -> this.jtAMorsecode.setText(this.jtAMorsecode.getText() + code));
 
     t.start();
-  } // end of btnPlay_ActionPerformed
+  }
+  void stopRecording() {
+    t.unregisterListeners();
+    t.stop();
+  }
 
   // Ende Methoden
   public static void main(String[] args) {

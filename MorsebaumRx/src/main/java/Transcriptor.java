@@ -130,6 +130,10 @@ public class Transcriptor {
   public void registerListener(Consumer<String> listener) {
     this.listeners.add(listener);
   }
+  
+  public void unregisterListeners() {
+    this.listeners.clear();
+  }
 
   public static void main(String... args) throws InterruptedException {
     Transcriptor t = new Transcriptor();
