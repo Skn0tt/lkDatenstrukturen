@@ -2,10 +2,6 @@
  * Copyright (c) Simon Knott 2018.
  */
 
-import io.reactivex.Observable;
-import io.reactivex.functions.BiPredicate;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Timed;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -17,10 +13,61 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class Transcriptor {
+
+  /*
+   * # Attributes
+   */
+
+  /**
+   * listeners that are called on new code
+   */
   private List<Consumer<String>> listeners = new ArrayList<>();
 
-  private Subject<byte[]> input = PublishSubject.create();
+  /**
+   * input subject
+   * emits all samples from microphone
+   */
+  private Subject<Integer> input = PublishSubject.create();
 
+  /*
+   * # Interface
+   */
+
+  /**
+   * starts the transcribing
+   */
+  public void start() {
+    recorder.start();
+    analyzer.start();
+  }
+
+  /**
+   * stops the recorder
+   * analyzer won't emit since no further items are emitted
+   */
+  public void stop() {
+    recorder.interrupt();
+  }
+
+  /**
+   * add a new listener
+   * @param listener to add
+   */
+  public void registerListener(Consumer<String> listener) {
+    this.listeners.add(listener);
+  }
+
+  /**
+   * remove all listeners
+   */
+  public void unregisterListeners() {
+    this.listeners.clear();
+  }
+
+  /**
+   * # Recorder
+   * Pipes Microphone input to `input` Subject
+   */
   private Thread recorder = new Thread(() -> {
     // Make Observable "Hot"
     input.publish();
@@ -64,7 +111,7 @@ public class Transcriptor {
 
         if (numBytesRead == -1)	break;
 
-        input.onNext(targetData);
+        input.onNext(Math.abs(toInt(targetData)));
       }
     } catch (LineUnavailableException ex) {
       ex.printStackTrace();
@@ -72,67 +119,76 @@ public class Transcriptor {
   });
 
   /**
-   * # Reactive Functions
+   * # Analyzer
+   * Analyzes input stream and publishes morse codes to subscribers
    */
-  private Thread analyzer = new Thread(() -> {
-    Observable<Integer> ints = input
-      .map(toInt)
-      .map(Math::abs);
-
-    Observable<Boolean> onOff = ints.map(threshhold);
-
-    Observable<Boolean> distinct = onOff.distinctUntilChanged(compareBoolean);
-
-    Observable<Boolean> debounced = distinct.debounce(20, TimeUnit.MILLISECONDS);
-
-    Observable<Timed<Boolean>> timed = debounced.timeInterval();
-
-    Observable<String> codes = timed.map(toCode);
-
-    codes.subscribe(code -> {
-      listeners.forEach(consumer -> consumer.accept(code));
-    });
-  });
-
-  private static Function<byte[], Integer> toInt = bytes -> bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
-
-  private static Function<Integer, Boolean> threshhold = v -> v > 120000000;
-
-  private static BiPredicate<Boolean, Boolean> compareBoolean = (a, b) -> a == b;
-
-  private static Predicate<Timed> isLong = v -> v.time(TimeUnit.MILLISECONDS) > 200;
-
-  private static Predicate<Timed> isDivider = v -> v.time(TimeUnit.MILLISECONDS) > 750;
-
-  private static Function<Timed<Boolean>, String> toCode = v -> {
-    if (!v.value()) { // mic was off -> it's a sign
-      return isLong.test(v) ? "-" : ".";
-    } else { // mic was on -> it's a break
-      return isDivider.test(v) ? " # " : "";
-    }
-  };
+  private Thread analyzer = new Thread(() ->
+    input
+      .map(amplitude -> threshold(amplitude))
+      .distinctUntilChanged()
+      .debounce(20, TimeUnit.MILLISECONDS)
+      .timeInterval()
+      .map(event -> toCode(event))
+      .subscribe(c -> listeners.forEach(l -> l.accept(c)))
+  );
 
   /**
-   * # Interface
+   * Checks if an event is loud enough
+   * @param amplitude to check
+   * @return loud enough
    */
-  public void start() {
-    recorder.start();
-
-    analyzer.start();
+  private static boolean threshold(int amplitude) {
+    return amplitude > 120000000;
   }
 
-  public void stop() {
-    recorder.interrupt();
+  /**
+   * Checks if an event is a long beep
+   * @param beep to check
+   * @return long or not
+   */
+  private static boolean isLong(Timed beep) {
+    return beep.time(TimeUnit.MILLISECONDS) > 200;
   }
 
-  public void registerListener(Consumer<String> listener) {
-    this.listeners.add(listener);
-  }
-  
-  public void unregisterListeners() {
-    this.listeners.clear();
+  /**
+   * Checks if an event is a divider
+   * @param beep to check
+   * @return divider or not
+   */
+  private static boolean isDivider(Timed beep) {
+    return beep.time(TimeUnit.MILLISECONDS) > 750;
   }
 
+  /**
+   * Maps an event to a morse code
+   * @param event to convert
+   * @return morse code
+   */
+  private static String toCode(Timed<Boolean> event) {
+    if (!event.value()) {
+      return isLong(event) ? "-" : ".";
+    } else {
+      return isDivider(event) ? " # " : "";
+    }
+  }
+
+  /*
+   * # Helpers
+   */
+
+  /**
+   * Converts a bytearray to it's integer value.
+   * @param bytes to convert
+   * @return integer value
+   */
+  private static int toInt (byte[] bytes) {
+    return bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
+  }
+
+  /*
+   * # Main Method
+   * For Testing purposes
+   */
   public static void main(String... args) throws InterruptedException {
     Transcriptor t = new Transcriptor();
 
