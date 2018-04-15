@@ -7,6 +7,7 @@ import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
 import javax.sound.sampled.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -101,18 +102,14 @@ public class Transcriptor {
       byte[] targetData = new byte[line.getBufferSize() / 5];
 
       // start recording
-      while (true) {
-        if (Thread.interrupted()) {
-          input.onComplete();
-          break;
-        }
-
+      while (!Thread.interrupted()) {
         numBytesRead = line.read(targetData, 0, targetData.length);
 
         if (numBytesRead == -1)	break;
 
         input.onNext(Math.abs(toInt(targetData)));
       }
+      input.onComplete();
     } catch (LineUnavailableException ex) {
       ex.printStackTrace();
     }
@@ -122,15 +119,15 @@ public class Transcriptor {
    * # Analyzer
    * Analyzes input stream and publishes morse codes to subscribers
    */
-  private Thread analyzer = new Thread(() ->
+  private Thread analyzer = new Thread(() -> {
     input
       .map(amplitude -> threshold(amplitude))
       .distinctUntilChanged()
       .debounce(20, TimeUnit.MILLISECONDS)
       .timeInterval()
       .map(event -> toCode(event))
-      .subscribe(c -> listeners.forEach(l -> l.accept(c)))
-  );
+      .subscribe(c -> listeners.forEach(l -> l.accept(c)));
+  });
 
   /**
    * Checks if an event is loud enough
